@@ -1,5 +1,5 @@
+import UsuarioRoutes from "@/presentation/routes/UsuarioRoutes"
 import express from "express"
-import UsuarioRoutes from "./routes/UsuarioRoutes"
 
 const app = express()
 

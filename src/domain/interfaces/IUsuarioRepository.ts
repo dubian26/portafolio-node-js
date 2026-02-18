@@ -1,4 +1,4 @@
-import { Usuario } from "../entities/Usuario"
+import { Usuario } from "@/domain/entities/Usuario"
 
 export interface IUsuarioRepository {
    buscarPorId(id: string): Promise<Usuario | null>

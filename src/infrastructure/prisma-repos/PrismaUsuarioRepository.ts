@@ -1,6 +1,6 @@
-import { Usuario } from "../../domain/entities/Usuario"
-import { IUsuarioRepository } from "../../domain/interfaces/IUsuarioRepository"
-import { dbClient } from "../config/DbClient"
+import { Usuario } from "@/domain/entities/Usuario"
+import { IUsuarioRepository } from "@/domain/interfaces/IUsuarioRepository"
+import { dbClient } from "@/infrastructure/config/DbClient"
 
 export class PrismaUsuarioRepository implements IUsuarioRepository {
    async buscarPorId(id: string): Promise<Usuario | null> {

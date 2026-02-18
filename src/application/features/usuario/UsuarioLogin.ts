@@ -1,5 +1,5 @@
+import { unitOfWork } from "@/infrastructure/config/UnitOfWork"
 import jwt from "jsonwebtoken"
-import { unitOfWork } from "../../../infrastructure/config/UnitOfWork"
 
 export interface UsuarioLoginRequest {
    email: string

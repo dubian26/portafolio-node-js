@@ -1,6 +1,6 @@
+import { Usuario } from "@/domain/entities/Usuario"
+import { unitOfWork } from "@/infrastructure/config/UnitOfWork"
 import { v7 as uuidv7 } from "uuid"
-import { Usuario } from "../../../domain/entities/Usuario"
-import { unitOfWork } from "../../../infrastructure/config/UnitOfWork"
 
 export interface UsuarioNuevoRequest {
    email: string

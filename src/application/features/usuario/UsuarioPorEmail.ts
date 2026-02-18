@@ -1,4 +1,4 @@
-import { unitOfWork } from "../../../infrastructure/config/UnitOfWork"
+import { unitOfWork } from "@/infrastructure/config/UnitOfWork"
 
 export interface UsuarioPorEmailRequest {
    email: string

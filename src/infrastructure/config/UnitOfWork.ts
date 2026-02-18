@@ -1,5 +1,5 @@
-import { IUsuarioRepository } from "../../domain/interfaces/IUsuarioRepository"
-import { PrismaUsuarioRepository } from "../prisma-repos/PrismaUsuarioRepository"
+import { IUsuarioRepository } from "@/domain/interfaces/IUsuarioRepository"
+import { PrismaUsuarioRepository } from "@/infrastructure/prisma-repos/PrismaUsuarioRepository"
 
 class UnitOfWork {
    // Lazy initialization
