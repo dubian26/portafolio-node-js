@@ -1,3 +1,4 @@
+import { CustomError } from "@/domain/errors/CustomError"
 import { unitOfWork } from "@/infrastructure/config/UnitOfWork"
 import jwt from "jsonwebtoken"
 
@@ -11,7 +12,7 @@ export class UsuarioLogin {
       const usuario = await unitOfWork.usuario.buscarPorEmail(request.email)
 
       if (!usuario || usuario.password !== request.password) {
-         throw new Error("Credenciales inválidas.")
+         throw new CustomError("Credenciales inválidas.", 400)
       }
 
       const payload = {
