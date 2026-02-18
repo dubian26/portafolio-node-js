@@ -3,17 +3,15 @@ import { CustomError } from "@/domain/errors/CustomError"
 import { unitOfWork } from "@/infrastructure/config/UnitOfWork"
 import { v7 as uuidv7 } from "uuid"
 
-export interface UsuarioNuevoRequest {
+export interface UsuarioClienteNuevoRequest {
    email: string
    password: string
-   tipoDocu: string
-   numeDocu: string
    nombres: string
    apellidos: string
 }
 
-export class UsuarioNuevo {
-   async execute(request: UsuarioNuevoRequest) {
+export class UsuarioClienteNuevo {
+   async execute(request: UsuarioClienteNuevoRequest) {
       const existe = await unitOfWork.usuario.buscarPorEmail(request.email)
       if (existe) throw new CustomError("El usuario ya existe en la base de datos.", 400)
 
@@ -21,10 +19,9 @@ export class UsuarioNuevo {
          id: uuidv7().replace(/-/g, ""),
          email: request.email,
          password: request.password,
-         tipoDocu: request.tipoDocu,
-         numeDocu: request.numeDocu,
          nombres: request.nombres,
          apellidos: request.apellidos,
+         rol: "cliente",
          activo: true,
          fechaCreacion: new Date(),
          fechaModifica: new Date()
@@ -33,7 +30,7 @@ export class UsuarioNuevo {
       await unitOfWork.usuario.insertar(nuevoUsuario)
 
       return {
-         id: nuevoUsuario.email,
+         id: nuevoUsuario.id,
          mensaje: "Usuario creado con éxito."
       }
    }

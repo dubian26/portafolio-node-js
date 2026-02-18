@@ -1,18 +1,6 @@
 ### Variables
 @baseUrl = http://localhost:3000/v1
-
-### Crear Usuario
-POST {{baseUrl}}/crear-usuario
-Content-Type: application/json
-
-{
-  "email": "test@example.com",
-  "password": "password123",
-  "tipoDocu": "CC",
-  "numeDocu": "123456789",
-  "nombres": "Juan",
-  "apellidos": "Perez"
-}
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAxOWM2ZmZhNTExNTcxNzZiOGQ2NDgzOWRiNmRkYmM0IiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwibm9tYnJlcyI6Ikp1YW4iLCJyb2wiOiJjbGllbnRlIiwidGlwb1Rva2VuIjoiYWNjZXNzIiwiaWF0IjoxNzcxNDA3MzE3LCJleHAiOjE3NzE0MDgyMTcsImlzcyI6IlBvcnRhZm9saW9PbmxpbmVSZWFjdC0yMDI1MDEwMS1EZXZlbG9wIn0.6Y9Nhgc0fmNYAIu8kP7jAK-iYaotLSUYSSh5I_rvwbA
 
 ### Login
 POST {{baseUrl}}/login
@@ -26,7 +14,19 @@ Content-Type: application/json
 ### Buscar Usuario por Email
 POST {{baseUrl}}/buscar-usuario-por-email
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "email": "test@example.com"
+}
+
+### Crear Usuario
+POST {{baseUrl}}/crear-usuario-cliente
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123",
+  "nombres": "Juan",
+  "apellidos": "Perez"
 }
