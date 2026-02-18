@@ -1,6 +1,6 @@
-import { IUsuarioRepository } from "../../domain/interfaces/IUsuarioRepository"
-import { Usuario } from "../../domain/entities/Usuario"
 import { v7 as uuidv7 } from "uuid"
+import { Usuario } from "../../../domain/entities/Usuario"
+import { unitOfWork } from "../../../infrastructure/config/UnitOfWork"
 
 export interface UsuarioNuevoRequest {
    email: string
@@ -12,13 +12,9 @@ export interface UsuarioNuevoRequest {
 }
 
 export class UsuarioNuevo {
-   constructor(private usuarioRepository: IUsuarioRepository) { }
-
    async execute(request: UsuarioNuevoRequest) {
-      const existe = await this.usuarioRepository.buscarPorEmail(request.email)
-      if (existe) {
-         throw new Error("El usuario ya existe en la base de datos.")
-      }
+      const existe = await unitOfWork.usuario.buscarPorEmail(request.email)
+      if (existe) throw new Error("El usuario ya existe en la base de datos.")
 
       const nuevoUsuario = new Usuario({
          id: uuidv7().replace(/-/g, ""),
@@ -33,7 +29,7 @@ export class UsuarioNuevo {
          fechaModifica: new Date()
       })
 
-      await this.usuarioRepository.insertar(nuevoUsuario)
+      await unitOfWork.usuario.insertar(nuevoUsuario)
 
       return {
          id: nuevoUsuario.email,

@@ -1,15 +1,12 @@
 import { Request, Response } from "express"
-import { PrismaUsuarioRepository } from "../../infrastructure/repositories/PrismaUsuarioRepository"
-import { UsuarioLogin } from "../../application/use-cases/UsuarioLogin"
-import { UsuarioNuevo } from "../../application/use-cases/UsuarioNuevo"
-import { UsuarioPorEmail } from "../../application/use-cases/UsuarioPorEmail"
-
-const repository = new PrismaUsuarioRepository()
+import { UsuarioLogin } from "../../application/features/usuario/UsuarioLogin"
+import { UsuarioNuevo } from "../../application/features/usuario/UsuarioNuevo"
+import { UsuarioPorEmail } from "../../application/features/usuario/UsuarioPorEmail"
 
 export class UsuarioController {
    async login(req: Request, res: Response) {
       try {
-         const useCase = new UsuarioLogin(repository)
+         const useCase = new UsuarioLogin()
          const token = await useCase.execute(req.body)
          res.json(token)
       } catch (error: any) {
@@ -19,7 +16,7 @@ export class UsuarioController {
 
    async crear(req: Request, res: Response) {
       try {
-         const useCase = new UsuarioNuevo(repository)
+         const useCase = new UsuarioNuevo()
          const result = await useCase.execute(req.body)
          res.status(201).json(result)
       } catch (error: any) {
@@ -29,7 +26,7 @@ export class UsuarioController {
 
    async buscarPorEmail(req: Request, res: Response) {
       try {
-         const useCase = new UsuarioPorEmail(repository)
+         const useCase = new UsuarioPorEmail()
          const result = await useCase.execute(req.body)
          res.json(result)
       } catch (error: any) {

@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken"
-import { IUsuarioRepository } from "../../domain/interfaces/IUsuarioRepository"
+import { unitOfWork } from "../../../infrastructure/config/UnitOfWork"
 
 export interface UsuarioLoginRequest {
    email: string
@@ -7,10 +7,8 @@ export interface UsuarioLoginRequest {
 }
 
 export class UsuarioLogin {
-   constructor(private usuarioRepository: IUsuarioRepository) { }
-
    async execute(request: UsuarioLoginRequest) {
-      const usuario = await this.usuarioRepository.buscarPorEmail(request.email)
+      const usuario = await unitOfWork.usuario.buscarPorEmail(request.email)
 
       if (!usuario || usuario.password !== request.password) {
          throw new Error("Credenciales inválidas.")
