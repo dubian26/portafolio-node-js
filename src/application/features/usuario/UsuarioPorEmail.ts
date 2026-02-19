@@ -1,12 +1,11 @@
-import { CustomError } from "@/domain/errors/CustomError"
-import { unitOfWork } from "@/infrastructure/config/UnitOfWork"
+import { unitOfWork } from "@/application/config/UnitOfWork"
 
-export interface UsuarioPorEmailRequest {
+export interface Props {
    email: string
 }
 
 export class UsuarioPorEmail {
-   async execute(request: UsuarioPorEmailRequest) {
+   async execute(request: Props) {
       const usuario = await unitOfWork.usuario.buscarPorEmail(request.email)
       return usuario?.toJSON()
    }

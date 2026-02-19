@@ -1,6 +1,6 @@
+import { unitOfWork } from "@/application/config/UnitOfWork"
 import { CustomError } from "@/domain/errors/CustomError"
 import { UserInfo } from "@/domain/models/UserInfo"
-import { unitOfWork } from "@/infrastructure/config/UnitOfWork"
 import jwt from "jsonwebtoken"
 
 export interface Props {
@@ -13,7 +13,7 @@ export class UsuarioLogin {
       const usuario = await unitOfWork.usuario.buscarPorEmail(request.email)
 
       if (!usuario || usuario.password !== request.password) {
-         throw new CustomError("Credenciales inválidas.", 400)
+         throw new CustomError("Credenciales inválidas.", 501)
       }
 
       const userAccess: UserInfo = {

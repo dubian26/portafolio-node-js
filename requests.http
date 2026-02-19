@@ -20,8 +20,8 @@ Authorization: Bearer {{token}}
   "email": "test@example.com"
 }
 
-### Crear Usuario
-POST {{baseUrl}}/crear-usuario-cliente
+### Crear Cuenta Usuario
+POST {{baseUrl}}/crear-cuenta-usuario
 Content-Type: application/json
 
 {
