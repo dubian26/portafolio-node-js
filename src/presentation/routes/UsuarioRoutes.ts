@@ -64,9 +64,16 @@ router.post("/refrescar-token", async (req, res) => {
       const jwtSecret = process.env.JWT_SECRET || ""
       const jwtEmisor = process.env.JWT_EMISOR || ""
 
-      const userInfo = jwt.verify(refreshToken, jwtSecret, {
+      const decodedToken = jwt.verify(refreshToken, jwtSecret, {
          issuer: jwtEmisor
       }) as UserInfo
+
+      const userInfo: UserInfo = {
+         id: decodedToken.id,
+         email: decodedToken.email,
+         nombre: decodedToken.nombre,
+         rol: decodedToken.rol
+      }
 
       const newAccessToken = tokenBuilder({
          tipoToken: "access",

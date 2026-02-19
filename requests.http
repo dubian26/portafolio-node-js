@@ -1,6 +1,7 @@
 ### Variables
 @baseUrl = http://localhost:3000/v1
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAxOWM2ZmZhNTExNTcxNzZiOGQ2NDgzOWRiNmRkYmM0IiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwibm9tYnJlcyI6Ikp1YW4iLCJyb2wiOiJjbGllbnRlIiwidGlwb1Rva2VuIjoiYWNjZXNzIiwiaWF0IjoxNzcxNDA3MzE3LCJleHAiOjE3NzE0MDgyMTcsImlzcyI6IlBvcnRhZm9saW9PbmxpbmVSZWFjdC0yMDI1MDEwMS1EZXZlbG9wIn0.6Y9Nhgc0fmNYAIu8kP7jAK-iYaotLSUYSSh5I_rvwbA
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAxOWM2ZmZhNTExNTcxNzZiOGQ2NDgzOWRiNmRkYmM0IiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwibm9tYnJlIjoiSnVhbiBQZXJleiIsInJvbCI6ImNsaWVudGUiLCJpYXQiOjE3NzE1NDEwNjksImV4cCI6MTc3MjQ0MTA2OSwiaXNzIjoiUG9ydGFmb2xpb09ubGluZVJlYWN0LTIwMjUwMTAxLURldmVsb3AifQ.NXajyhtumC42411Fo06HMjd3fBw359EGc0Q7o4hN6Og
+@refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAxOWM2ZmZhNTExNTcxNzZiOGQ2NDgzOWRiNmRkYmM0IiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwibm9tYnJlIjoiSnVhbiBQZXJleiIsInJvbCI6ImNsaWVudGUiLCJpYXQiOjE3NzE1NDEwNjksImV4cCI6MTk0NDM0MTA2OSwiaXNzIjoiUG9ydGFmb2xpb09ubGluZVJlYWN0LTIwMjUwMTAxLURldmVsb3AifQ.-u0i096cdw3bX3Ga7YvjbzXcqarHvvg8VghoQNFdGgQ
 
 ### Login
 POST {{baseUrl}}/login
@@ -11,10 +12,16 @@ Content-Type: application/json
   "password": "password123"
 }
 
+### Refrescar Token
+POST {{baseUrl}}/refrescar-token
+Content-Type: application/json
+Cookie: refreshToken={{refreshToken}}
+
 ### Buscar Usuario por Email
 POST {{baseUrl}}/buscar-usuario-por-email
 Content-Type: application/json
-Authorization: Bearer {{token}}
+Cookie: accessToken={{accessToken}}
+Cookie: refreshToken={{refreshToken}}
 
 {
   "email": "test@example.com"
