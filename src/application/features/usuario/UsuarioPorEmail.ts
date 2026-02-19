@@ -7,6 +7,6 @@ export interface Props {
 export class UsuarioPorEmail {
    async execute(request: Props) {
       const usuario = await unitOfWork.usuario.buscarPorEmail(request.email)
-      return usuario?.toJSON()
+      return usuario?.toResult()
    }
 }

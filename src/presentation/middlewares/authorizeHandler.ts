@@ -9,13 +9,11 @@ export interface AuthenticatedRequest extends Request {
 }
 
 export const authorizeHandler = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-   const authHeader = req.headers.authorization
+   const token = req.cookies.accessToken
 
-   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      throw new CustomError("No autorizado. Token inexistente.", 401)
+   if (!token) {
+      throw new CustomError("No autorizado. Token inexistente.", 501)
    }
-
-   const token = authHeader.split(" ")[1]
 
    try {
       const jwtSecret = process.env.JWT_SECRET || ""
@@ -23,6 +21,6 @@ export const authorizeHandler = (req: AuthenticatedRequest, res: Response, next:
       req.user = decoded
       next()
    } catch (error) {
-      throw new CustomError("Token inválido o expirado.", 401)
+      throw new CustomError("Token inválido o expirado.", 501)
    }
 }

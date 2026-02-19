@@ -27,13 +27,11 @@ export class Usuario {
    get fechaCreacion() { return this.props.fechaCreacion }
    get fechaModifica() { return this.props.fechaModifica }
 
-   // Business logic can be added here
-   public desactivar() {
-      this.props.activo = false
-      this.props.fechaModifica = new Date()
+   public toJSON() {
+      return { ...this.props }
    }
 
-   public toJSON() {
+   public toResult() {
       return { ...this.props }
    }
 }
