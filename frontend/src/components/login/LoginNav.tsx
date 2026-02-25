@@ -2,9 +2,22 @@ import { useTheme } from "@/hooks/useTheme"
 import { cn } from "@/utils/common"
 import { Moon, ShoppingCart, Sun } from "lucide-react"
 import { motion } from "motion/react"
+import { useNavigate } from "react-router-dom"
+
+const navItems = [
+   { label: "Inicio", path: "/" },
+   { label: "Registrarse", path: "/registrarse" },
+   { label: "Tienda", path: "/tienda" },
+   { label: "Acerca de", path: "/acerca-de" },
+]
 
 export const LoginNav = () => {
    const { theme, toggleTheme } = useTheme()
+   const navigate = useNavigate()
+
+   const handleNavigate = (path: string) => {
+      navigate(path)
+   }
 
    return (
       <header className={cn(
@@ -23,12 +36,12 @@ export const LoginNav = () => {
             </div>
             <nav className="hidden md:flex items-center gap-8">
                {
-                  ["Inicio", "Registrarse", "Tienda", "Acerca de"].map(item =>
-                     <a key={item} href="#" className={cn(
-                        "text-sm font-medium text-slate-400",
+                  navItems.map(item =>
+                     <a key={item.path} onClick={() => handleNavigate(item.path)} className={cn(
+                        "cursor-pointer text-sm font-medium text-slate-400",
                         "hover:text-white transition-colors"
                      )}>
-                        {item}
+                        {item.label}
                      </a>
                   )
                }

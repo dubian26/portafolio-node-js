@@ -1,8 +1,15 @@
 import { cn } from "@/utils/common"
 import { AtSign, Eye, Lock, Mail, Volume2 } from "lucide-react"
 import { motion } from "motion/react"
+import { useNavigate } from "react-router-dom"
 
 export const LoginForm = () => {
+   const navigate = useNavigate()
+
+   const handleClickRegis = () => {
+      navigate("/registrarse")
+   }
+
    return (
       <motion.div
          initial={{ opacity: 0, x: -20 }}
@@ -83,7 +90,11 @@ export const LoginForm = () => {
             <div className="mt-8 text-center">
                <p className="text-sm text-slate-400">
                   ¿No tienes una cuenta?
-                  <a href="#" className="text-primary font-bold hover:underline ml-1">Registrarse</a>
+                  <a
+                     onClick={handleClickRegis}
+                     className="text-primary font-bold hover:underline ml-1">
+                     Registrarse
+                  </a>
                </p>
             </div>
 
