@@ -1,4 +1,41 @@
-body {
-   margin: 0;
-   min-height: 100vh;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+   --color-primary: #6366f1;
+   --color-bg-dark: #0a0a1a;
+   --color-card-dark: #16162a;
+}
+
+@layer base {
+   body {
+      @apply bg-bg-dark text-slate-100 font-sans;
+      margin: 0;
+      min-height: 100vh;
+   }
+}
+
+.bg-dots {
+   background-size: 24px 24px;
+   background-image: radial-gradient(circle, rgba(99, 102, 241, 0.15) 1px, transparent 1px);
+   mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 60%, transparent 100%);
+   -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 60%, transparent 100%);
+}
+
+.decorative-blob {
+   background: radial-gradient(circle at center, rgba(99, 102, 241, 0.2) 0%, transparent 70%);
+   filter: blur(60px);
+}
+
+
+.theme-toggle-btn {
+   background: rgba(99, 102, 241, 0.15);
+   border: 1px solid rgba(99, 102, 241, 0.25);
+   cursor: pointer;
+}
+
+.theme-toggle-btn:hover {
+   background: rgba(99, 102, 241, 0.25);
+   border-color: rgba(99, 102, 241, 0.4);
 }
