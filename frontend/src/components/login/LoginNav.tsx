@@ -1,5 +1,5 @@
 import { useTheme } from "@/hooks/useTheme"
-import { cn } from "@/utils/common"
+import { cn } from "@/lib/utils"
 import { Moon, ShoppingCart, Sun } from "lucide-react"
 import { motion } from "motion/react"
 import { useNavigate } from "react-router-dom"

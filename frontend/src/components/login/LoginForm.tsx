@@ -1,13 +1,19 @@
-import { cn } from "@/utils/common"
+import { useAppContext } from "@/contexts/AppContext"
+import { cn } from "@/lib/utils"
 import { AtSign, Eye, Lock, Mail, Volume2 } from "lucide-react"
 import { motion } from "motion/react"
 import { useNavigate } from "react-router-dom"
 
 export const LoginForm = () => {
    const navigate = useNavigate()
+   const { mostrarMensaje } = useAppContext()
 
    const handleClickRegis = () => {
       navigate("/registrarse")
+   }
+
+   const handleClickLogin = () => {
+      mostrarMensaje("Login")
    }
 
    return (
@@ -78,11 +84,13 @@ export const LoginForm = () => {
                   </div>
                </div>
 
-               <button className={cn(
-                  "w-full bg-primary hover:bg-primary/90 text-white font-bold",
-                  "py-3.5 rounded-xl transition-all transform active:scale-[0.98]",
-                  "shadow-lg shadow-primary/25 mt-4"
-               )}>
+               <button
+                  onClick={handleClickLogin}
+                  className={cn(
+                     "w-full bg-primary hover:bg-primary/90 text-white font-bold",
+                     "py-3.5 rounded-xl transition-all transform active:scale-[0.98]",
+                     "shadow-lg shadow-primary/25 mt-4"
+                  )}>
                   Iniciar Sesión
                </button>
             </form>

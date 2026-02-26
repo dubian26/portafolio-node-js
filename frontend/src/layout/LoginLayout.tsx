@@ -1,5 +1,5 @@
 import { LoginNav } from "@/components/login/LoginNav"
-import { cn } from "@/utils/common"
+import { cn } from "@/lib/utils"
 import { Fragment } from "react"
 import { Outlet } from "react-router-dom"
 
