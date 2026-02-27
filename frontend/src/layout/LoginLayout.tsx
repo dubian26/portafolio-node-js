@@ -15,7 +15,7 @@ export const LoginLayout = () => {
             <Outlet />
          </main>
 
-         <footer className="relative z-10 px-6 lg:px-20 py-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium text-slate-500">
+         <footer className="relative z-10 px-6 lg:px-20 py-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium text-muted-foreground">
             <p>© 2026 ShopEase Inc. All rights reserved.</p>
             <div className="flex gap-8">
                <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>

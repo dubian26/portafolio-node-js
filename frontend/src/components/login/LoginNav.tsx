@@ -22,13 +22,13 @@ export const LoginNav = () => {
    return (
       <header className={cn(
          "relative z-10 flex items-center justify-between",
-         "px-6 lg:px-20 py-6 border-b border-white/5 backdrop-blur-md"
+         "px-6 lg:px-20 py-6 border-b border-border backdrop-blur-md"
       )}>
          <div className="flex items-center gap-10">
             <div className="flex items-center gap-3">
                <div className={cn(
                   "bg-primary p-2 rounded-lg flex items-center justify-center",
-                  "text-white shadow-lg shadow-primary/20"
+                  "text-primary-foreground shadow-lg shadow-primary/20"
                )}>
                   <ShoppingCart size={20} />
                </div>
@@ -38,8 +38,8 @@ export const LoginNav = () => {
                {
                   navItems.map(item =>
                      <a key={item.path} onClick={() => handleNavigate(item.path)} className={cn(
-                        "cursor-pointer text-sm font-medium text-slate-400",
-                        "hover:text-white transition-colors"
+                        "cursor-pointer text-sm font-medium text-muted-foreground",
+                        "hover:text-foreground transition-colors"
                      )}>
                         {item.label}
                      </a>
@@ -49,8 +49,8 @@ export const LoginNav = () => {
          </div>
          <div className="flex items-center gap-6">
             <button className={cn(
-               "hidden sm:block text-sm font-medium text-slate-400",
-               "hover:text-white transition-colors cursor-pointer"
+               "hidden sm:block text-sm font-medium text-muted-foreground",
+               "hover:text-foreground transition-colors cursor-pointer"
             )}>
                Contacta Soporte
             </button>

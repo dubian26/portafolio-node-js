@@ -3,6 +3,9 @@ import { cn } from "@/lib/utils"
 import { AtSign, Eye, Lock, Mail, Volume2 } from "lucide-react"
 import { motion } from "motion/react"
 import { useNavigate } from "react-router-dom"
+import { Input } from "@/components/ui/input"
+import { Card } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 
 export const LoginForm = () => {
    const navigate = useNavigate()
@@ -23,60 +26,50 @@ export const LoginForm = () => {
          transition={{ duration: 0.5 }}
          className="w-full max-w-md"
       >
-         <div className="bg-card-dark p-8 rounded-2xl shadow-2xl border border-white/5">
+         <Card className="p-8 shadow-2xl border border-border">
             <div className="mb-8">
                <h1 className="text-3xl font-bold mb-2">Bienvenido</h1>
-               <p className="text-slate-400 text-sm">
+               <p className="text-muted-foreground text-sm">
                   Ingresa tus credenciales para acceder a tu cuenta.
                </p>
             </div>
 
             <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
                <div className="space-y-2">
-                  <label className="text-sm font-semibold block px-1 text-slate-300">Correo Electrónico</label>
+                  <label className="text-sm font-semibold block px-1 text-foreground">Correo Electrónico</label>
                   <div className="relative group">
                      <Mail className={cn(
                         "absolute left-3 top-1/2 -translate-y-1/2",
-                        "text-slate-500 group-focus-within:text-primary",
+                        "text-muted-foreground group-focus-within:text-primary",
                         "transition-colors"
                      )} size={18} />
-                     <input
-                        type="email" placeholder="name@example.com"
-                        className={cn(
-                           "w-full pl-10 pr-4 py-3 bg-white/5 border",
-                           "border-white/10 rounded-xl focus:ring-2",
-                           "focus:ring-primary focus:border-transparent",
-                           "outline-none transition-all text-white",
-                           "placeholder:text-slate-600"
-                        )}
+                     <Input
+                        type="email"
+                        placeholder="name@example.com"
+                        className="pl-10"
                      />
                   </div>
                </div>
 
                <div className="space-y-2">
                   <div className="flex justify-between items-center px-1">
-                     <label className="text-sm font-semibold block text-slate-300">Contraseña</label>
+                     <label className="text-sm font-semibold block text-foreground">Contraseña</label>
                      <a href="#" className="text-xs text-primary font-semibold hover:underline">¿Olvidaste tu contraseña?</a>
                   </div>
                   <div className="relative group">
                      <Lock className={cn(
                         "absolute left-3 top-1/2 -translate-y-1/2",
-                        "text-slate-500 group-focus-within:text-primary",
+                        "text-muted-foreground group-focus-within:text-primary",
                         "transition-colors"
                      )} size={18} />
-                     <input
-                        type="password" placeholder="••••••••"
-                        className={cn(
-                           "w-full pl-10 pr-10 py-3 bg-white/5 border",
-                           "border-white/10 rounded-xl focus:ring-2",
-                           "focus:ring-primary focus:border-transparent",
-                           "outline-none transition-all text-white",
-                           "placeholder:text-slate-600"
-                        )}
+                     <Input
+                        type="password"
+                        placeholder="••••••••"
+                        className="pl-10 pr-10"
                      />
                      <button type="button" className={cn(
                         "absolute right-3 top-1/2 -translate-y-1/2",
-                        "text-slate-500 hover:text-white",
+                        "text-muted-foreground hover:text-foreground",
                         "transition-colors"
                      )}>
                         <Eye size={18} />
@@ -84,19 +77,15 @@ export const LoginForm = () => {
                   </div>
                </div>
 
-               <button
+               <Button
                   onClick={handleClickLogin}
-                  className={cn(
-                     "w-full bg-primary hover:bg-primary/90 text-white font-bold",
-                     "py-3.5 rounded-xl transition-all transform active:scale-[0.98]",
-                     "shadow-lg shadow-primary/25 mt-4"
-                  )}>
+                  className="w-full mt-4">
                   Iniciar Sesión
-               </button>
+               </Button>
             </form>
 
             <div className="mt-8 text-center">
-               <p className="text-sm text-slate-400">
+               <p className="text-sm text-muted-foreground">
                   ¿No tienes una cuenta?
                   <a
                      onClick={handleClickRegis}
@@ -106,21 +95,15 @@ export const LoginForm = () => {
                </p>
             </div>
 
-            <div className="mt-8 pt-8 border-t border-white/5 flex justify-center gap-4">
-               <button className={cn(
-                  "p-3 border border-white/10 rounded-xl hover:bg-white/5",
-                  "transition-colors text-slate-400 hover:text-white"
-               )}>
+            <div className="mt-8 pt-8 border-t border-border flex justify-center gap-4">
+               <Button variant="ghost" className="p-3 rounded-xl">
                   <AtSign size={20} />
-               </button>
-               <button className={cn(
-                  "p-3 border border-white/10 rounded-xl hover:bg-white/5",
-                  "transition-colors text-slate-400 hover:text-white"
-               )}>
+               </Button>
+               <Button variant="ghost" className="p-3 rounded-xl">
                   <Volume2 size={20} />
-               </button>
+               </Button>
             </div>
-         </div>
+         </Card>
       </motion.div>
    )
 }

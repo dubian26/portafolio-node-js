@@ -35,14 +35,14 @@
 }
 
 .theme-toggle-btn {
-   background: rgba(99, 102, 241, 0.15);
-   border: 1px solid rgba(99, 102, 241, 0.25);
+   background: var(--primary/15);
+   border: 1px solid var(--primary/25);
    cursor: pointer;
 }
 
 .theme-toggle-btn:hover {
-   background: rgba(99, 102, 241, 0.25);
-   border-color: rgba(99, 102, 241, 0.4);
+   background: var(--primary/25);
+   border-color: var(--primary/40);
 }
 
 @theme inline {
@@ -88,11 +88,11 @@
 
 :root {
    --radius: 0.625rem;
-   --background: #faf9f7;
+   --background: #f5f0eb; /* taupe-100 light theme */
    --foreground: #444;
-   --card: oklch(1 0 0);
+   --card: #ffffff; /* light surface for cards/popovers */
    --card-foreground: oklch(0.145 0 0);
-   --popover: oklch(1 0 0);
+   --popover: #ffffff;
    --popover-foreground: oklch(0.145 0 0);
    --primary: #6366f1;
    --primary-foreground: oklch(0.985 0 0);
@@ -124,7 +124,7 @@
 .dark {
    --background: #0a0a1a;
    --foreground: var(--color-slate-100);
-   --card: #0a0a1a;
+   --card: #0a0a1a; /* deep dark surface */
    --card-foreground: var(--color-slate-100);
    --popover: #0a0a1a;
    --popover-foreground: var(--color-slate-100);

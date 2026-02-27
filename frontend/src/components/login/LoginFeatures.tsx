@@ -15,7 +15,7 @@ export const LoginFeatures = () => {
             <h2 className="text-3xl lg:text-4xl font-extrabold mt-3 leading-tight">
                Por que escoger ShopEase?
             </h2>
-            <p className="text-slate-400 mt-6 text-lg leading-relaxed">
+            <p className="text-muted-foreground mt-6 text-lg leading-relaxed">
                Hemos creado la mejor experiencia de compra
                con velocidad, seguridad y pensando en ti.
             </p>
