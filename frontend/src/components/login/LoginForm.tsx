@@ -26,7 +26,7 @@ export const LoginForm = () => {
          transition={{ duration: 0.5 }}
          className="w-full max-w-md"
       >
-         <Card className="p-8 shadow-2xl border border-border">
+         <Card className="p-8 shadow-lg border-2 border-border">
             <div className="mb-8">
                <h1 className="text-3xl font-bold mb-2">Bienvenido</h1>
                <p className="text-muted-foreground text-sm">
@@ -42,7 +42,7 @@ export const LoginForm = () => {
                         "absolute left-3 top-1/2 -translate-y-1/2",
                         "text-muted-foreground group-focus-within:text-primary",
                         "transition-colors"
-                     )} size={18} />
+                     )} size={20} />
                      <Input
                         type="email"
                         placeholder="name@example.com"
@@ -61,7 +61,7 @@ export const LoginForm = () => {
                         "absolute left-3 top-1/2 -translate-y-1/2",
                         "text-muted-foreground group-focus-within:text-primary",
                         "transition-colors"
-                     )} size={18} />
+                     )} size={20} />
                      <Input
                         type="password"
                         placeholder="••••••••"
@@ -72,14 +72,14 @@ export const LoginForm = () => {
                         "text-muted-foreground hover:text-foreground",
                         "transition-colors"
                      )}>
-                        <Eye size={18} />
+                        <Eye size={20} />
                      </button>
                   </div>
                </div>
 
                <Button
                   onClick={handleClickLogin}
-                  className="w-full mt-4">
+                  className="w-full mt-4 cursor-pointer">
                   Iniciar Sesión
                </Button>
             </form>
@@ -89,7 +89,7 @@ export const LoginForm = () => {
                   ¿No tienes una cuenta?
                   <a
                      onClick={handleClickRegis}
-                     className="text-primary font-bold hover:underline ml-1">
+                     className="text-primary font-bold hover:underline ml-1 cursor-pointer">
                      Registrarse
                   </a>
                </p>
