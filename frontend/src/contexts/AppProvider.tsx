@@ -38,11 +38,11 @@ export const AppProvider = ({ children }: Props) => {
       let message = ""
       if (typeof error === "string") message = error
       else message = error.errorModel?.message || error.message || "Error desconocido"
-      toast(message)
+      toast.error(message)
    }, [])
 
    const mostrarMensaje = useCallback((mensaje: string) => {
-      toast(mensaje)
+      toast.success(mensaje)
    }, [])
 
    const context = useMemo(() => ({
