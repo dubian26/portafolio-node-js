@@ -19,13 +19,13 @@ router.post("/login", async (req, res) => {
    const useCase = new UsuarioLogin()
    const usuario = await useCase.execute(req.body)
 
-   const userInfo: UserInfo = {
-      id: usuario.id,
-      email: usuario.email,
-      nombres: usuario.nombres,
-      apellidos: usuario.apellidos,
-      rol: usuario.rol
-   }
+    const userInfo: UserInfo = {
+       id: usuario.id,
+       email: usuario.email,
+       nombres: usuario.nombres,
+       apellidos: usuario.apellidos,
+       rolId: usuario.rolId
+    }
 
    const accessToken = tokenBuilder({
       tipoToken: "access",
@@ -69,13 +69,13 @@ router.post("/refrescar-token", async (req, res) => {
          issuer: jwtEmisor
       }) as UserInfo
 
-      const userInfo: UserInfo = {
-         id: decodedToken.id,
-         email: decodedToken.email,
-         nombres: decodedToken.nombres,
-         apellidos: decodedToken.apellidos,
-         rol: decodedToken.rol
-      }
+       const userInfo: UserInfo = {
+          id: decodedToken.id,
+          email: decodedToken.email,
+          nombres: decodedToken.nombres,
+          apellidos: decodedToken.apellidos,
+          rolId: decodedToken.rolId
+       }
 
       const newAccessToken = tokenBuilder({
          tipoToken: "access",

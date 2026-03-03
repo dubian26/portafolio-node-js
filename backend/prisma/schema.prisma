@@ -13,15 +13,66 @@ datasource db {
 }
 
 model Usuario {
+  id            String    @id @default(uuid())
+  email         String    @unique @db.VarChar(100)
+  password      String    @db.VarChar(255)
+  nombres       String    @db.VarChar(50)
+  apellidos     String    @db.VarChar(50)
+  activo        Boolean   @default(true)
+  fechaCreacion DateTime  @default(now()) @map("fecha_creacion")
+  fechaModifica DateTime  @updatedAt @map("fecha_modifica")
+
+  rolId         String
+  rol           Rol       @relation(fields: [rolId], references: [id])
+
+  @@map("Usuarios")
+}
+
+model Rol {
+  id            String        @id @default(uuid())
+  nombre        String        @unique @db.VarChar(50)
+  descripcion   String?       @db.VarChar(200)
+  activo        Boolean       @default(true)
+  fechaCreacion DateTime      @default(now()) @map("fecha_creacion")
+  fechaModifica DateTime      @updatedAt @map("fecha_modifica")
+
+  usuarios      Usuario[]
+  permisos      PermisoRol[]
+
+  @@map("Roles")
+}
+
+model Permiso {
+  id            String        @id @default(uuid())
+  path          String        @db.VarChar(100)
+  titulo        String        @db.VarChar(100)
+  tipo          String        @db.VarChar(20)
+  icono         String?       @db.VarChar(50)
+  orden         Int           @default(0)
+  activo        Boolean       @default(true)
+  fechaCreacion DateTime      @default(now()) @map("fecha_creacion")
+  fechaModifica DateTime      @updatedAt @map("fecha_modifica")
+
+  padreId       String?
+  padre         Permiso?      @relation("PermisoHijo", fields: [padreId], references: [id])
+  hijos         Permiso[]     @relation("PermisoHijo")
+
+  roles         PermisoRol[]
+
+  @@map("Permisos")
+}
+
+model PermisoRol {
   id            String   @id @default(uuid())
-  email         String   @unique @db.VarChar(100)
-  password      String   @db.VarChar(50)
-  nombres       String   @db.VarChar(50)
-  apellidos     String   @db.VarChar(50)
-  rol           String   @db.VarChar(50)
+  rolId         String
+  permisoId     String
   activo        Boolean  @default(true)
   fechaCreacion DateTime @default(now()) @map("fecha_creacion")
   fechaModifica DateTime @updatedAt @map("fecha_modifica")
 
-  @@map("Usuarios")
+  rol           Rol      @relation(fields: [rolId], references: [id], onDelete: Cascade)
+  permiso       Permiso  @relation(fields: [permisoId], references: [id], onDelete: Cascade)
+
+  @@unique([rolId, permisoId])
+  @@map("PermisosRoles")
 }

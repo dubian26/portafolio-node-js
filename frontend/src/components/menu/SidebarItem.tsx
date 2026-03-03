@@ -1,15 +1,16 @@
-import { useContext, type ReactNode } from "react"
+import type { LucideIcon } from "lucide-react"
+import { useContext } from "react"
 import { NavLink } from "react-router-dom"
 import { SidebarContext } from "./SidebarContext"
 
 interface Props {
-   icon: ReactNode
-   text: ReactNode
+   icon: LucideIcon
+   text: string
    alert: boolean
    to?: string
 }
 
-export const SidebarItem = ({ icon, text, alert, to = "/" }: Props) => {
+export const SidebarItem = ({ icon: Icon, text, alert, to = "/" }: Props) => {
    const { expanded } = useContext(SidebarContext)
 
    return (
@@ -19,12 +20,12 @@ export const SidebarItem = ({ icon, text, alert, to = "/" }: Props) => {
             relative flex items-center px-3 py-2 my-1 
             font-medium rounded-md cursor-pointer transition-colors group
             ${isActive ?
-               'bg-linear-to-tr from-primary/10 to-primary/50 text-white border-r-4 border-primary' :
-               'hover:bg-primary/10 text-gray-400'
+               "bg-linear-to-tr from-primary/10 to-primary/50 text-white border-r-4 border-primary" :
+               "hover:bg-primary/10 text-gray-400"
             }
          `}
       >
-         {icon}
+         <Icon size={20} />
          <span className={`
             overflow-hidden transition-all 
             ${expanded ? "w-52 ml-3" : "w-0"}`

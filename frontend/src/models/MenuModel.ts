@@ -1,6 +1,8 @@
+import type { LucideIcon } from "lucide-react"
+
 export interface MenuModel {
     id: number
-    icono: string
+    icono: LucideIcon
     texto: string
     alerta: boolean
     ruta?: string

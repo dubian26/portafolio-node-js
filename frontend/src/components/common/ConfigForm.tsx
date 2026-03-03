@@ -1,8 +1,9 @@
 import { convert } from "@/appconfig/Convert"
 import { useAppContext } from "@/contexts/AppContext"
 import { type ConfigModel } from "@/models/ConfigModel"
-import { Button } from "primereact/button"
-import { InputText } from "primereact/inputtext"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Save, RefreshCw } from "lucide-react"
 import { Fragment, useEffect, useState } from "react"
 
 interface Props {
@@ -141,57 +142,57 @@ export const ConfigForm = ({ onSave }: Props) => {
 
    return (
       <Fragment>
-         <div className="grid grid-cols-12 gap-3">
+         <div className="grid grid-cols-12 gap-4 my-4">
 
-            <div className="col-span-12 md:col-span-6">
-               <label htmlFor="mockDelay" className="text-sm pl-1">
+            <div className="col-span-12 md:col-span-6 space-y-1">
+               <label htmlFor="mockDelay" className="text-sm pl-1 text-foreground">
                   Simular tiempo en http requests:
                </label>
-               <InputText
+               <Input
                   id="mockDelay" value={formData.mockRequestDelay}
                   onChange={e => handleChange("mockRequestDelay", e.target.value)}
                   className="w-full"
                />
             </div>
 
-            <div className="col-span-12 md:col-span-6">
-               <label htmlFor="expAccess" className="text-sm pl-1">
+            <div className="col-span-12 md:col-span-6 space-y-1">
+               <label htmlFor="expAccess" className="text-sm pl-1 text-foreground">
                   Expiración Access Token:
                </label>
-               <InputText
+               <Input
                   id="expAccess" value={formData.expAccessToken}
                   onChange={e => handleChange("expAccessToken", e.target.value)}
                   className="w-full"
                />
             </div>
 
-            <div className="col-span-12 md:col-span-6">
-               <label htmlFor="expRefresh" className="text-sm pl-1">
+            <div className="col-span-12 md:col-span-6 space-y-1">
+               <label htmlFor="expRefresh" className="text-sm pl-1 text-foreground">
                   Expiración Refresh Token:
                </label>
-               <InputText
+               <Input
                   id="expRefresh" value={formData.expRefreshToken}
                   onChange={e => handleChange("expRefreshToken", e.target.value)}
                   className="w-full"
                />
             </div>
 
-            <div className="col-span-12 md:col-span-6">
-               <label htmlFor="sessionTimeout" className="text-sm pl-1">
+            <div className="col-span-12 md:col-span-6 space-y-1">
+               <label htmlFor="sessionTimeout" className="text-sm pl-1 text-foreground">
                   Tiempo espera para cerrar sesion por inactividad:
                </label>
-               <InputText
+               <Input
                   id="sessionTimeout" value={formData.sessionTimeout}
                   onChange={e => handleChange("sessionTimeout", e.target.value)}
                   className="w-full"
                />
             </div>
 
-            <div className="col-span-12 md:col-span-6">
-               <label htmlFor="sessionWarning" className="text-sm pl-1">
+            <div className="col-span-12 md:col-span-6 space-y-1">
+               <label htmlFor="sessionWarning" className="text-sm pl-1 text-foreground">
                   Avisar antes de cerrar sesion:
                </label>
-               <InputText
+               <Input
                   id="sessionWarning" value={formData.sessionWarning}
                   onChange={e => handleChange("sessionWarning", e.target.value)}
                   className="w-full"
@@ -199,20 +200,24 @@ export const ConfigForm = ({ onSave }: Props) => {
             </div>
          </div>
 
-         <div className="flex justify-end gap-2 mt-4">
+         <div className="flex justify-end gap-2 mt-6">
             <Button
-               label="Restaurar por defecto"
-               icon="fa-solid fa-refresh"
-               severity="secondary"
+               variant="secondary"
                onClick={handleReset}
                disabled={saving}
-            />
+               className="cursor-pointer"
+            >
+               <RefreshCw size={16} className="mr-2" />
+               Restaurar por defecto
+            </Button>
             <Button
-               label="Guardar Cambios"
-               icon="fa-solid fa-save"
                onClick={handleSave}
-               loading={saving}
-            />
+               disabled={saving}
+               className="cursor-pointer"
+            >
+               <Save size={16} className="mr-2" />
+               {saving ? "Guardando..." : "Guardar Cambios"}
+            </Button>
          </div>
       </Fragment>
    )

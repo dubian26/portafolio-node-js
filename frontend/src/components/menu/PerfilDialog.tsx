@@ -1,17 +1,26 @@
 import { ConfigForm } from "@/components/common/ConfigForm"
 import { Title } from "@/components/common/Title"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import {
+   DropdownMenu,
+   DropdownMenuContent,
+   DropdownMenuItem,
+   DropdownMenuLabel,
+   DropdownMenuSeparator,
+   DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { EditarUsuario } from "@/components/usuario/EditarUsuario"
 import { useAppContext } from "@/contexts/AppContext"
-import { Dialog } from "primereact/dialog"
-import { Menu } from "primereact/menu"
-import { OverlayPanel } from "primereact/overlaypanel"
-import { useState, type RefObject } from "react"
+import { LogOut, Settings, User as UserIcon } from "lucide-react"
+import { useState, type ReactNode } from "react"
+import { useNavigate } from "react-router-dom"
 
 interface Props {
-   ref: RefObject<OverlayPanel | null>
+   children: ReactNode
 }
 
-export const PerfilDialog = ({ ref }: Props) => {
+export const PerfilDialog = ({ children }: Props) => {
+   const navigate = useNavigate()
    const { userSession, logout } = useAppContext()
    const [editDialogVisible, setEditDialogVisible] = useState(false)
    const [configDialogVisible, setConfigDialogVisible] = useState(false)
@@ -42,48 +51,61 @@ export const PerfilDialog = ({ ref }: Props) => {
       logout()
    }
 
+   const handleLogout = () => {
+      logout()
+      navigate("/")
+   }
+
    return (
-      <OverlayPanel ref={ref}>
-         <div className="p-2">
-            <div className="font-bold">{userSession?.nombres} {userSession?.apellidos}</div>
-            <div>{userSession?.email}</div>
-         </div>
-         <Menu
-            pt={{ root: { className: "border-0 bg-transparent" } }}
-            model={[
-               {
-                  label: "Perfil", icon: "fa-solid fa-user",
-                  command: () => handleAbrirEditarUsu()
-               },
-               {
-                  label: "Configuración", icon: "fa-solid fa-gear",
-                  command: () => handleAbrirConfigDialog()
-               },
-               {
-                  label: "Cerrar Sesión", icon: "fa-solid fa-sign-out",
-                  command: () => logout()
-               }
-            ]}
-         />
-         <Dialog
-            header={<Title>Parametros del Sistema</Title>}
-            visible={configDialogVisible}
-            className="w-11/12 lg:w-3/4 xl:w-2/3"
-            onHide={handleCerrarConfigDialog}
-         >
-            <ConfigForm onSave={handleConfigActualizado} />
+      <>
+         <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+               {children}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56" align="end" forceMount>
+               <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                     <p className="text-sm font-medium leading-none">{userSession?.nombres} {userSession?.apellidos}</p>
+                     <p className="text-xs leading-none text-muted-foreground">{userSession?.email}</p>
+                  </div>
+               </DropdownMenuLabel>
+               <DropdownMenuSeparator />
+               <DropdownMenuItem onClick={handleAbrirEditarUsu} className="cursor-pointer">
+                  <UserIcon className="mr-2 h-4 w-4" />
+                  <span>Perfil</span>
+               </DropdownMenuItem>
+               <DropdownMenuItem onClick={handleAbrirConfigDialog} className="cursor-pointer">
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Configuración</span>
+               </DropdownMenuItem>
+               <DropdownMenuSeparator />
+               <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Cerrar Sesión</span>
+               </DropdownMenuItem>
+            </DropdownMenuContent>
+         </DropdownMenu>
+
+         <Dialog open={configDialogVisible} onOpenChange={setConfigDialogVisible}>
+            <DialogContent className="sm:max-w-2xl">
+               <DialogHeader>
+                  <DialogTitle><Title>Parámetros del Sistema</Title></DialogTitle>
+               </DialogHeader>
+               <ConfigForm onSave={handleConfigActualizado} />
+            </DialogContent>
          </Dialog>
-         <Dialog
-            header={<Title>Editar Usuario</Title>}
-            visible={editDialogVisible}
-            className="w-11/12 lg:w-3/4 xl:w-2/3"
-            onHide={handleCerrarEditarUsu}
-         >
-            <EditarUsuario
-               id={userSession?.id ?? ""}
-               onUpdate={handleUsuActualizado}
-            />
+
+         <Dialog open={editDialogVisible} onOpenChange={setEditDialogVisible}>
+            <DialogContent className="sm:max-w-2xl">
+               <DialogHeader>
+                  <DialogTitle><Title>Editar Usuario</Title></DialogTitle>
+               </DialogHeader>
+               <EditarUsuario
+                  id={userSession?.id ?? ""}
+                  onUpdate={handleUsuActualizado}
+               />
+            </DialogContent>
          </Dialog>
-      </OverlayPanel>
+      </>
    )
 }

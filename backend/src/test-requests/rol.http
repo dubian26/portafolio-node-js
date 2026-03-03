@@ -1,0 +1,43 @@
+### Variables
+@baseUrl = http://localhost:3000/v1/roles
+
+### Crear Rol (Administrador)
+# @name crearRol
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+   "nombre": "Administrador",
+   "descripcion": "Rol con todos los accesos",
+   "activo": true
+}
+
+### Crear Rol (Cliente)
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+   "nombre": "Cliente",
+   "descripcion": "Rol basico"
+}
+
+### Listar todos los roles
+GET {{baseUrl}}
+
+### Obtener Rol por ID
+# Reemplaza el ID por uno generado
+@rolId = {{crearRol.response.body.id}}
+GET {{baseUrl}}/{{rolId}}
+
+### Actualizar Rol
+PUT {{baseUrl}}/{{rolId}}
+Content-Type: application/json
+
+{
+   "nombre": "Super Administrador",
+   "descripcion": "Rol con control total",
+   "activo": true
+}
+
+### Eliminar Rol
+DELETE {{baseUrl}}/{{rolId}}

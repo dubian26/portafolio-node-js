@@ -1,13 +1,11 @@
 import { useAppContext } from "@/contexts/AppContext"
 import { type UsuarioModel } from "@/models/UsuarioModel"
 import { usuarioRepository } from "@/repositories/UsuarioRepository"
-import { Button } from "primereact/button"
-import { Divider } from "primereact/divider"
-import { IconField } from "primereact/iconfield"
-import { InputIcon } from "primereact/inputicon"
-import { InputText } from "primereact/inputtext"
-import { OverlayPanel } from "primereact/overlaypanel"
-import { useEffect, useRef, useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Password } from "@/components/ui/password"
+import { Mail, User as UserIcon, Save } from "lucide-react"
+import { useEffect, useState } from "react"
 
 interface Props {
    id: string
@@ -20,12 +18,9 @@ export const EditarUsuario = ({ id, onUpdate }: Props) => {
    const [apellidos, setApellidos] = useState("")
    const [email, setEmail] = useState("")
    const [password, setPassword] = useState("")
-   const [showPassword, setShowPassword] = useState(false)
    const [confirPassword, setConfirPassword] = useState("")
-   const [showConfirPassword, setShowConfirPassword] = useState(false)
    const [loading, setLoading] = useState(false)
    const [originalUsuario, setOriginalUsuario] = useState<UsuarioModel | null>(null)
-   const op = useRef<OverlayPanel>(null)
 
    useEffect(() => {
       const cargarUsuario = async () => {
@@ -52,41 +47,6 @@ export const EditarUsuario = ({ id, onUpdate }: Props) => {
          cargarUsuario()
       }
    }, [id, mostrarError])
-
-   const checkPasswordStrength = (pass: string) => {
-      let score = 0
-      if (pass.length > 7) score += 1
-      if (/[a-z]/.test(pass) && /[A-Z]/.test(pass)) score += 1
-      if (/\d/.test(pass)) score += 1
-      if (/[^A-Za-z0-9]/.test(pass)) score += 1
-      return score
-   }
-
-   const strengthScore = checkPasswordStrength(password)
-
-   const getStrengthLabel = (score: number) => {
-      if (score < 2) return "Débil"
-      if (score < 4) return "Moderada"
-      return "Fuerte"
-   }
-
-   const getBarColorClass = (score: number, index: number) => {
-      let color = "bg-gray-200"
-      if (score < 2) {
-         if (index === 1) color = "bg-red-400"
-      } else if (score < 4) {
-         if (index <= 2) color = "bg-yellow-200"
-      } else {
-         if (index <= 3) color = "bg-green-300"
-      }
-      return color
-   }
-
-   const getTextColorClass = (score: number) => {
-      if (score < 2) return "text-red-400"
-      if (score < 4) return "text-yellow-200"
-      return "text-green-300"
-   }
 
    const handleClickActualizar = async () => {
       if (!nombres.trim()) {
@@ -152,103 +112,73 @@ export const EditarUsuario = ({ id, onUpdate }: Props) => {
    if (!originalUsuario && !loading) return null
 
    return (
-      <div className="grid grid-cols-12 gap-2">
-         <div className="col-span-12">
-            <IconField iconPosition="left">
-               <InputIcon className="fa-solid fa-envelope" />
-               <InputText
+      <div className="grid grid-cols-12 gap-5 mt-4">
+         <div className="col-span-12 space-y-1">
+            <label className="text-sm pl-1 text-foreground">Email (Solo lectura)</label>
+            <div className="relative group">
+               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors" size={20} />
+               <Input
                   placeholder="Email" value={email}
-                  disabled={true} className="w-full p-filled" // Read only
+                  disabled={true} className="w-full pl-10 opacity-50 cursor-not-allowed"
                   readOnly
                />
-            </IconField>
+            </div>
          </div>
 
-         <div className="col-span-12 md:col-span-6">
-            <IconField iconPosition="left">
-               <InputIcon className="fa-solid fa-user" />
-               <InputText
+         <div className="col-span-12 md:col-span-6 space-y-1">
+            <label className="text-sm pl-1 text-foreground">Nombres</label>
+            <div className="relative group">
+               <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={20} />
+               <Input
                   placeholder="Nombres" value={nombres}
-                  disabled={loading} className="w-full"
+                  disabled={loading} className="w-full pl-10"
                   onChange={(e) => setNombres(e.target.value)}
                />
-            </IconField>
+            </div>
          </div>
 
-         <div className="col-span-12 md:col-span-6">
-            <IconField iconPosition="left">
-               <InputIcon className="fa-solid fa-user" />
-               <InputText
+         <div className="col-span-12 md:col-span-6 space-y-1">
+            <label className="text-sm pl-1 text-foreground">Apellidos</label>
+            <div className="relative group">
+               <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={20} />
+               <Input
                   placeholder="Apellidos" value={apellidos}
-                  disabled={loading} className="w-full"
+                  disabled={loading} className="w-full pl-10"
                   onChange={(e) => setApellidos(e.target.value)}
                />
-            </IconField>
+            </div>
          </div>
 
-         <div className="col-span-12 md:col-span-6">
-            <IconField iconPosition="left">
-               <InputIcon className="fa-solid fa-lock" />
-               <InputText
-                  type={showPassword ? "text" : "password"} placeholder="Dejar en blanco para no cambiar"
-                  value={password} disabled={loading} className="w-full" style={{ paddingRight: "2.5rem" }}
-                  onChange={(e) => setPassword(e.target.value)}
-                  onFocus={(e) => op.current?.show(e, e.target)}
-                  onBlur={() => op.current?.hide()}
-               />
-               <InputIcon
-                  className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"} cursor-pointer`}
-                  style={{ position: "absolute", right: "0.75rem", cursor: "pointer" }}
-                  onClick={() => setShowPassword(!showPassword)}
-               />
-            </IconField>
-            <OverlayPanel ref={op}>
-               <div className="flex flex-col gap-2 w-full" style={{ minWidth: "250px" }}>
-                  <div className="flex gap-1 h-2">
-                     <div className={`flex-1 rounded-sm ${getBarColorClass(strengthScore, 1)}`}></div>
-                     <div className={`flex-1 rounded-sm ${getBarColorClass(strengthScore, 2)}`}></div>
-                     <div className={`flex-1 rounded-sm ${getBarColorClass(strengthScore, 3)}`}></div>
-                  </div>
-                  <div className={`font-bold ${getTextColorClass(strengthScore)}`}>
-                     {getStrengthLabel(strengthScore)}
-                  </div>
-                  <Divider className="m-1" />
-                  <p className="mt-1">Sugerencias:</p>
-                  <ul className="pl-2 ml-2 mt-0">
-                     <li>Al menos una minúscula</li>
-                     <li>Al menos una mayúscula</li>
-                     <li>Al menos un número</li>
-                     <li>Al menos un caracter especial @$!%*?&</li>
-                     <li>Mínimo 7 caracteres</li>
-                  </ul>
-               </div>
-            </OverlayPanel>
-         </div>
-
-         <div className="col-span-12 md:col-span-6">
-            <IconField iconPosition="left">
-               <InputIcon className="fa-solid fa-lock" />
-               <InputText
-                  type={showConfirPassword ? "text" : "password"} placeholder="Confirmar nuevo password"
-                  value={confirPassword} disabled={loading || !password}
-                  onChange={(e) => setConfirPassword(e.target.value)}
-                  className="w-full"
-               />
-               <InputIcon
-                  className={`fa-solid ${showConfirPassword ? "fa-eye-slash" : "fa-eye"} cursor-pointer`}
-                  style={{ position: "absolute", right: "0.75rem", cursor: "pointer" }}
-                  onClick={() => setShowConfirPassword(!showConfirPassword)}
-               />
-            </IconField>
-         </div>
-
-         <div className="col-span-12 flex justify-end mt-3">
-            <Button
-               label="Actualizar" icon="pi pi-save"
-               loading={loading} onClick={handleClickActualizar}
+         <div className="col-span-12 md:col-span-6 space-y-1">
+            <label className="text-sm pl-1 text-foreground">Nueva contraseña</label>
+            <Password
+               password={password}
+               disabled={loading}
+               showStrengthScore={true}
+               onChange={(pass) => setPassword(pass)}
             />
+            <p className="text-xs text-muted-foreground mt-1 text-right">Dejar en blanco para no cambiar</p>
+         </div>
+
+         <div className="col-span-12 md:col-span-6 space-y-1">
+            <label className="text-sm pl-1 text-foreground">Confirmar nueva contraseña</label>
+            <Password
+               password={confirPassword}
+               disabled={loading || !password}
+               showStrengthScore={false}
+               onChange={(pass) => setConfirPassword(pass)}
+            />
+         </div>
+
+         <div className="col-span-12 flex justify-end mt-4 pt-4 border-t border-border">
+            <Button
+               disabled={loading} onClick={handleClickActualizar}
+               className="cursor-pointer"
+            >
+               <Save size={16} className="mr-2" />
+               {loading ? "Actualizando..." : "Actualizar"}
+            </Button>
          </div>
       </div>
    )
 }
-

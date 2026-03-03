@@ -4,7 +4,7 @@ export interface UsuarioProps {
    password: string
    nombres: string
    apellidos: string
-   rol: string
+   rolId: string
    activo: boolean
    fechaCreacion: Date
    fechaModifica: Date
@@ -22,7 +22,7 @@ export class Usuario {
    get password() { return this.props.password }
    get nombres() { return this.props.nombres }
    get apellidos() { return this.props.apellidos }
-   get rol() { return this.props.rol }
+   get rolId() { return this.props.rolId }
    get activo() { return this.props.activo }
    get fechaCreacion() { return this.props.fechaCreacion }
    get fechaModifica() { return this.props.fechaModifica }

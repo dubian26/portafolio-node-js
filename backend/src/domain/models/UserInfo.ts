@@ -3,5 +3,5 @@ export interface UserInfo {
    email: string
    nombres: string
    apellidos: string
-   rol: string
+   rolId: string
 }

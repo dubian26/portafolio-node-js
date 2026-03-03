@@ -1,6 +1,8 @@
+import { Title } from "@/components/common/Title"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { Password } from "@/components/ui/password"
 import { useAppContext } from "@/contexts/AppContext"
 import { cn } from "@/lib/utils"
 import { usuarioRepository } from "@/repositories/UsuarioRepository"
@@ -8,8 +10,6 @@ import { AtSign, Loader2, LogIn, Mail, Volume2 } from "lucide-react"
 import { motion } from "motion/react"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { Title } from "../common/Title"
-import { Password } from "../ui/password"
 
 export const LoginForm = () => {
    const navigate = useNavigate()
@@ -31,6 +31,7 @@ export const LoginForm = () => {
          const userInfo = await usuarioRepository.autenticar(email, password)
          if (userInfo === undefined) throw new Error("Usuario o password incorrecto")
          login(userInfo)
+         navigate("/contenido")
       } catch (error) {
          console.error(error)
          mostrarError("Falló la autenticación")

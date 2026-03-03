@@ -11,6 +11,7 @@ import { useAppContext } from "./contexts/AppContext"
 export const App = () => {
    const { userSession } = useAppContext()
    const estaAutenti = userSession !== null
+   
    const router = useMemo(() => createBrowserRouter([
       {
          path: "/",
