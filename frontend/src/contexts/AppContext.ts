@@ -13,8 +13,8 @@ export const defaultConfig: ConfigModel = {
 }
 
 interface Props {
-   usuarioSesion: InfoUsuaModel | null
-   validarUsuarioSes: () => Promise<void>
+   userSession: InfoUsuaModel | null
+   login: (userInfo: InfoUsuaModel) => void
    logout: () => void
    mostrarError: (error: CustomError | string) => void
    mostrarMensaje: (mensaje: string) => void

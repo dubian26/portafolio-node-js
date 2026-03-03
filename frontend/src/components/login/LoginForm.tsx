@@ -1,22 +1,42 @@
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
 import { useAppContext } from "@/contexts/AppContext"
 import { cn } from "@/lib/utils"
-import { AtSign, Eye, Lock, Mail, Volume2 } from "lucide-react"
+import { usuarioRepository } from "@/repositories/UsuarioRepository"
+import { AtSign, Loader2, LogIn, Mail, Volume2 } from "lucide-react"
 import { motion } from "motion/react"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { Input } from "@/components/ui/input"
-import { Card } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Title } from "../common/Title"
+import { Password } from "../ui/password"
 
 export const LoginForm = () => {
    const navigate = useNavigate()
-   const { mostrarMensaje } = useAppContext()
+   const [loading, setLoading] = useState(false)
+   const { mostrarError, login } = useAppContext()
+   const [email, setEmail] = useState("")
+   const [password, setPassword] = useState("")
 
-   const handleClickRegis = () => {
-      navigate("/registrarse")
-   }
+   const handleClickLogin = async () => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(email)) {
+         mostrarError("Email no es válido")
+         return
+      }
 
-   const handleClickLogin = () => {
-      mostrarMensaje("Login")
+      setLoading(true)
+
+      try {
+         const userInfo = await usuarioRepository.autenticar(email, password)
+         if (userInfo === undefined) throw new Error("Usuario o password incorrecto")
+         login(userInfo)
+      } catch (error) {
+         console.error(error)
+         mostrarError("Falló la autenticación")
+      } finally {
+         setLoading(false)
+      }
    }
 
    return (
@@ -28,15 +48,15 @@ export const LoginForm = () => {
       >
          <Card className="p-8 shadow-lg border-2 border-border">
             <div className="mb-8">
-               <h1 className="text-3xl font-bold mb-2">Bienvenido</h1>
+               <Title>Bienvenido</Title>
                <p className="text-muted-foreground text-sm">
                   Ingresa tus credenciales para acceder a tu cuenta.
                </p>
             </div>
 
             <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
-               <div className="space-y-2">
-                  <label className="text-sm font-semibold block px-1 text-foreground">Correo Electrónico</label>
+               <div className="space-y-1">
+                  <label className="text-sm block px-1 text-foreground">Correo Electrónico</label>
                   <div className="relative group">
                      <Mail className={cn(
                         "absolute left-3 top-1/2 -translate-y-1/2",
@@ -44,43 +64,38 @@ export const LoginForm = () => {
                         "transition-colors"
                      )} size={20} />
                      <Input
-                        type="email"
-                        placeholder="name@example.com"
-                        className="pl-10"
+                        type="email" placeholder="name@example.com"
+                        className="pl-10" value={email}
+                        onChange={e => setEmail(e.target.value)}
                      />
                   </div>
                </div>
 
-               <div className="space-y-2">
+               <div className="space-y-1">
                   <div className="flex justify-between items-center px-1">
-                     <label className="text-sm font-semibold block text-foreground">Contraseña</label>
+                     <label className="text-sm block text-foreground">Contraseña</label>
                      <a href="#" className="text-xs text-primary font-semibold hover:underline">¿Olvidaste tu contraseña?</a>
                   </div>
                   <div className="relative group">
-                     <Lock className={cn(
-                        "absolute left-3 top-1/2 -translate-y-1/2",
-                        "text-muted-foreground group-focus-within:text-primary",
-                        "transition-colors"
-                     )} size={20} />
-                     <Input
-                        type="password"
-                        placeholder="••••••••"
-                        className="pl-10 pr-10"
+                     <Password
+                        password={password}
+                        showStrengthScore={false}
+                        onChange={pass => setPassword(pass)}
                      />
-                     <button type="button" className={cn(
-                        "absolute right-3 top-1/2 -translate-y-1/2",
-                        "text-muted-foreground hover:text-foreground",
-                        "transition-colors"
-                     )}>
-                        <Eye size={20} />
-                     </button>
                   </div>
                </div>
 
                <Button
                   onClick={handleClickLogin}
                   className="w-full mt-4 cursor-pointer">
-                  Iniciar Sesión
+                  {
+                     loading ?
+                        <Loader2 className="animate-spin" size={20} /> :
+                        <LogIn size={20} strokeWidth={3} />
+                  }
+                  {
+                     loading ? "Iniciando sesión..." : "Iniciar sesión"
+                  }
                </Button>
             </form>
 
@@ -88,7 +103,7 @@ export const LoginForm = () => {
                <p className="text-sm text-muted-foreground">
                   ¿No tienes una cuenta?
                   <a
-                     onClick={handleClickRegis}
+                     onClick={() => navigate("/registrarse")}
                      className="text-primary font-bold hover:underline ml-1 cursor-pointer">
                      Registrarse
                   </a>

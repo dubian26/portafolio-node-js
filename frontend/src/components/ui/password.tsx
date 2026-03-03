@@ -8,6 +8,7 @@ import { useMemo, useState } from "react"
 interface Props {
    password: string
    disabled?: boolean
+   showStrengthScore?: boolean
    onChange: (password: string) => void
 }
 
@@ -44,7 +45,11 @@ const getTextColorClass = (score: number) => {
    return "text-green-300"
 }
 
-export const Password = ({ password, disabled = false, onChange }: Props) => {
+export const Password = ({
+   password,
+   disabled = false,
+   showStrengthScore = true,
+   onChange }: Props) => {
    const [showPassword, setShowPassword] = useState(false)
    const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 
@@ -53,7 +58,7 @@ export const Password = ({ password, disabled = false, onChange }: Props) => {
    const textColorClass = useMemo(() => getTextColorClass(strengthScore), [strengthScore])
 
    return (
-      <Popover open={isPopoverOpen}>
+      <Popover open={isPopoverOpen && showStrengthScore}>
          <PopoverAnchor asChild>
             <div className="relative group">
                <Lock className={cn(
@@ -82,8 +87,11 @@ export const Password = ({ password, disabled = false, onChange }: Props) => {
                </button>
             </div>
          </PopoverAnchor>
-         <PopoverContent align="start" onOpenAutoFocus={(e) => e.preventDefault()}>
-            <div className="flex flex-col gap-2 w-full min-w-64">
+         <PopoverContent
+            align="start" className="w-full min-w-72 text-sm"
+            onOpenAutoFocus={(e) => e.preventDefault()}
+         >
+            <div className="flex flex-col gap-2">
                <div className="flex gap-1 h-2">
                   <div className={`flex-1 rounded-sm ${getBarColorClass(strengthScore, 1)}`}></div>
                   <div className={`flex-1 rounded-sm ${getBarColorClass(strengthScore, 2)}`}></div>

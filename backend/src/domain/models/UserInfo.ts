@@ -1,6 +1,7 @@
 export interface UserInfo {
    id: string
    email: string
-   nombre: string
+   nombres: string
+   apellidos: string
    rol: string
 }

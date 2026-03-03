@@ -1,10 +1,10 @@
 import { CustomError } from "@/appconfig/CustomError"
+import { FetchUtility } from "@/appconfig/FetchUtility"
 import { SessionTimeout } from "@/components/common/SessionTimeout"
 import { Toaster } from "@/components/ui/sonner"
 import { AppContext } from "@/contexts/AppContext"
 import { type InfoUsuaModel } from "@/models/InfoUsuaModel"
-import { authService } from "@/services/AuthService"
-import { useCallback, useMemo, useState, type ReactNode } from "react"
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react"
 import { toast } from "sonner"
 
 interface Props {
@@ -12,57 +12,78 @@ interface Props {
 }
 
 export const AppProvider = ({ children }: Props) => {
-   // estados
-   const [usuarioSesion, setUsuarioSesion] = useState<InfoUsuaModel | null>(null)
-   const estaAutenti = usuarioSesion !== null
+   const [userSession, setUserSession] = useState<InfoUsuaModel | null>(() => {
+      const savedSession = sessionStorage.userSession
+      if (!savedSession) return null
 
-   const logout = useCallback(() => {
-      setUsuarioSesion(null)
-      sessionStorage.accessToken = ""
-      sessionStorage.refreshToken = ""
+      try {
+         return JSON.parse(savedSession) as InfoUsuaModel
+      } catch (error) {
+         console.error("Error al parsear la sesión:", error)
+         return null
+      }
+   })
+
+   const login = useCallback((userInfo: InfoUsuaModel) => {
+      sessionStorage.userSession = JSON.stringify(userInfo)
+      setUserSession(userInfo)
    }, [])
 
-   const validarUsuarioSes = useCallback(async () => {
-      const token = sessionStorage.accessToken
-      const usuario = await authService.verificarToken(token)
-      if (usuario === null) logout()
-      setUsuarioSesion(usuario)
+   const logout = useCallback(() => {
+      sessionStorage.userSession = ""
+      setUserSession(null)
+   }, [])
+
+   // Registrar el handler de logout en FetchUtility
+   // para que se ejecute cuando falle la renovación del token
+   useEffect(() => {
+      FetchUtility.setLogoutHandler(() => {
+         logout()
+         toast.error(
+            "Su sesión ha expirado",
+            { description: "El token no pudo ser renovado. Vuelva a iniciar sesión" }
+         )
+      })
    }, [logout])
+
 
    const handleTimeout = useCallback(() => {
       logout()
-      toast("Su sesión ha expirado por inactividad")
+      toast.error(
+         "Su sesión ha expirado por inactividad",
+         { description: "Vuelva a iniciar sesión" }
+      )
    }, [logout])
 
    const mostrarError = useCallback((error: CustomError | string) => {
       let message = ""
       if (typeof error === "string") message = error
       else message = error.errorModel?.message || error.message || "Error desconocido"
-      toast.error(message)
+      toast.error("Ha ocurrido un error!", { description: message })
    }, [])
 
    const mostrarMensaje = useCallback((mensaje: string) => {
-      toast.success(mensaje)
+      toast.success("Operación exitosa!", { description: mensaje })
    }, [])
 
    const context = useMemo(() => ({
-      usuarioSesion,
-      validarUsuarioSes,
+      userSession,
+      login,
       logout,
       mostrarError,
       mostrarMensaje
    }), [
-      usuarioSesion,
-      validarUsuarioSes,
+      userSession,
+      login,
       logout,
       mostrarError,
       mostrarMensaje])
 
    return (
       <AppContext.Provider value={context}>
-         <Toaster />
+         <Toaster position="top-center" />
          {
-            estaAutenti &&
+            userSession !== null &&
             <SessionTimeout
                onTimeout={handleTimeout}
                timeout="15m"

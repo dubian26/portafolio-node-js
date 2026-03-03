@@ -22,7 +22,8 @@ router.post("/login", async (req, res) => {
    const userInfo: UserInfo = {
       id: usuario.id,
       email: usuario.email,
-      nombre: `${usuario.nombres} ${usuario.apellidos}`,
+      nombres: usuario.nombres,
+      apellidos: usuario.apellidos,
       rol: usuario.rol
    }
 
@@ -71,7 +72,8 @@ router.post("/refrescar-token", async (req, res) => {
       const userInfo: UserInfo = {
          id: decodedToken.id,
          email: decodedToken.email,
-         nombre: decodedToken.nombre,
+         nombres: decodedToken.nombres,
+         apellidos: decodedToken.apellidos,
          rol: decodedToken.rol
       }
 

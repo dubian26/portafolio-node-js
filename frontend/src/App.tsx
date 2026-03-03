@@ -6,9 +6,11 @@ import { LoginPage } from "@/pages/LoginPage"
 import { RegistrarsePage } from "@/pages/RegistrarsePage"
 import { useMemo } from "react"
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
+import { useAppContext } from "./contexts/AppContext"
 
 export const App = () => {
-   const estaAutenti = false
+   const { userSession } = useAppContext()
+   const estaAutenti = userSession !== null
    const router = useMemo(() => createBrowserRouter([
       {
          path: "/",
