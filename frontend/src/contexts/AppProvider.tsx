@@ -3,15 +3,29 @@ import { FetchUtility } from "@/appconfig/FetchUtility"
 import { SessionTimeout } from "@/components/common/SessionTimeout"
 import { Toaster } from "@/components/ui/sonner"
 import { AppContext } from "@/contexts/AppContext"
+import type { ConfigModel } from "@/models/ConfigModel"
 import { type InfoUsuaModel } from "@/models/InfoUsuaModel"
+import { configRepository } from "@/repositories/ConfigRepository"
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react"
 import { toast } from "sonner"
+
+const defaultConfig: ConfigModel = {
+   id: 1,
+   mockRequestDelay: "2s",
+   expRefreshToken: "1d",
+   expAccessToken: "15m",
+   sessionTimeout: "30m",
+   sessionWarning: "2m"
+}
 
 interface Props {
    children: ReactNode
 }
 
 export const AppProvider = ({ children }: Props) => {
+   const [loading, setLoading] = useState(true)
+   const [config, setConfig] = useState<ConfigModel>(defaultConfig)
+
    const [userSession, setUserSession] = useState<InfoUsuaModel | null>(() => {
       const savedSession = sessionStorage.userSession
       if (!savedSession) return null
@@ -23,6 +37,21 @@ export const AppProvider = ({ children }: Props) => {
          return null
       }
    })
+
+   const cargarConfig = useCallback(async () => {
+      try {
+         setLoading(true)
+         const storedConfig = await configRepository.obtener()
+         if (storedConfig) setConfig(storedConfig)
+      } catch (error) {
+         console.error("Error loading configuration:", error)
+      } finally {
+         setLoading(false)
+      }
+   }, [])
+
+   useEffect(() => { configRepository.asignarConfig(config) }, [config])
+   useEffect(() => { cargarConfig() }, [cargarConfig])
 
    const login = useCallback((userInfo: InfoUsuaModel) => {
       sessionStorage.userSession = JSON.stringify(userInfo)
@@ -46,6 +75,19 @@ export const AppProvider = ({ children }: Props) => {
       })
    }, [logout])
 
+   const updateConfig = useCallback(async (newConfig: ConfigModel) => {
+      try {
+         await configRepository.guardar(newConfig)
+         setConfig(newConfig)
+      } catch (error) {
+         console.error("Error saving configuration:", error)
+         throw error
+      }
+   }, [])
+
+   const resetConfig = useCallback(async () => {
+      await updateConfig(defaultConfig)
+   }, [updateConfig])
 
    const handleTimeout = useCallback(() => {
       logout()
@@ -68,16 +110,22 @@ export const AppProvider = ({ children }: Props) => {
 
    const context = useMemo(() => ({
       userSession,
+      config,
       login,
       logout,
       mostrarError,
-      mostrarMensaje
+      mostrarMensaje,
+      updateConfig,
+      resetConfig
    }), [
       userSession,
+      config,
       login,
       logout,
       mostrarError,
-      mostrarMensaje])
+      mostrarMensaje,
+      updateConfig,
+      resetConfig])
 
    return (
       <AppContext.Provider value={context}>
@@ -90,7 +138,7 @@ export const AppProvider = ({ children }: Props) => {
                avisarCuandoQuede="2m"
             />
          }
-         {children}
+         {loading ? <div>Cargando...</div> : children}
       </AppContext.Provider>
    )
 }

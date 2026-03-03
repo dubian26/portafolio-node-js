@@ -3,21 +3,15 @@ import { type ConfigModel } from "@/models/ConfigModel"
 import { type InfoUsuaModel } from "@/models/InfoUsuaModel"
 import { createContext, useContext } from "react"
 
-export const defaultConfig: ConfigModel = {
-   id: 1,
-   mockRequestDelay: "2s",
-   expRefreshToken: "1d",
-   expAccessToken: "15m",
-   sessionTimeout: "30m",
-   sessionWarning: "2m"
-}
-
 interface Props {
    userSession: InfoUsuaModel | null
+   config: ConfigModel
    login: (userInfo: InfoUsuaModel) => void
    logout: () => void
    mostrarError: (error: CustomError | string) => void
    mostrarMensaje: (mensaje: string) => void
+   updateConfig: (config: ConfigModel) => Promise<void>
+   resetConfig: () => Promise<void>
 }
 
 export const AppContext = createContext<Props | null>(null)
