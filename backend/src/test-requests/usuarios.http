@@ -27,6 +27,17 @@ Cookie: refreshToken={{refreshToken}}
   "email": "test@example.com"
 }
 
+### Buscar Usuario por Id
+POST {{baseUrl}}/buscar-usuario-por-id
+Content-Type: application/json
+Cookie: accessToken={{accessToken}}
+Cookie: refreshToken={{refreshToken}}
+
+{
+  "id": "123456"
+}
+
+
 ### Crear Cuenta Usuario
 POST {{baseUrl}}/crear-cuenta-usuario
 Content-Type: application/json

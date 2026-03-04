@@ -1,18 +1,11 @@
 import { ConfigForm } from "@/components/common/ConfigForm"
 import { Title } from "@/components/common/Title"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import {
-   DropdownMenu,
-   DropdownMenuContent,
-   DropdownMenuItem,
-   DropdownMenuLabel,
-   DropdownMenuSeparator,
-   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import * as Dialog from "@/components/ui/dialog"
+import * as DropdownMenu from "@/components/ui/dropdown-menu"
 import { EditarUsuario } from "@/components/usuario/EditarUsuario"
 import { useAppContext } from "@/contexts/AppContext"
 import { LogOut, Settings, User as UserIcon } from "lucide-react"
-import { useState, type ReactNode } from "react"
+import { Fragment, useState, type ReactNode } from "react"
 import { useNavigate } from "react-router-dom"
 
 interface Props {
@@ -57,55 +50,55 @@ export const PerfilDialog = ({ children }: Props) => {
    }
 
    return (
-      <>
-         <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+      <Fragment>
+         <DropdownMenu.Root>
+            <DropdownMenu.Trigger asChild>
                {children}
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end" forceMount>
-               <DropdownMenuLabel className="font-normal">
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content className="w-56 p-4 text-lg" align="end" forceMount>
+               <DropdownMenu.Label className="font-normal">
                   <div className="flex flex-col space-y-1">
-                     <p className="text-sm font-medium leading-none">{userSession?.nombres} {userSession?.apellidos}</p>
-                     <p className="text-xs leading-none text-muted-foreground">{userSession?.email}</p>
+                     <p className="text-lg font-medium leading-none">{userSession?.nombres} {userSession?.apellidos}</p>
+                     <p className="text-md leading-none text-muted-foreground">{userSession?.email}</p>
                   </div>
-               </DropdownMenuLabel>
-               <DropdownMenuSeparator />
-               <DropdownMenuItem onClick={handleAbrirEditarUsu} className="cursor-pointer">
-                  <UserIcon className="mr-2 h-4 w-4" />
+               </DropdownMenu.Label>
+               <DropdownMenu.Separator />
+               <DropdownMenu.Item onClick={handleAbrirEditarUsu} className="cursor-pointer">
+                  <UserIcon className="mr-2 size-5" strokeWidth={2.5} />
                   <span>Perfil</span>
-               </DropdownMenuItem>
-               <DropdownMenuItem onClick={handleAbrirConfigDialog} className="cursor-pointer">
-                  <Settings className="mr-2 h-4 w-4" />
+               </DropdownMenu.Item>
+               <DropdownMenu.Item onClick={handleAbrirConfigDialog} className="cursor-pointer">
+                  <Settings className="mr-2 size-5" strokeWidth={2.5} />
                   <span>Configuración</span>
-               </DropdownMenuItem>
-               <DropdownMenuSeparator />
-               <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
-                  <LogOut className="mr-2 h-4 w-4" />
+               </DropdownMenu.Item>
+               <DropdownMenu.Separator />
+               <DropdownMenu.Item onClick={handleLogout} className="cursor-pointer">
+                  <LogOut className="mr-2 size-5" strokeWidth={2.5} />
                   <span>Cerrar Sesión</span>
-               </DropdownMenuItem>
-            </DropdownMenuContent>
-         </DropdownMenu>
+               </DropdownMenu.Item>
+            </DropdownMenu.Content>
+         </DropdownMenu.Root>
 
-         <Dialog open={configDialogVisible} onOpenChange={setConfigDialogVisible}>
-            <DialogContent className="sm:max-w-2xl">
-               <DialogHeader>
-                  <DialogTitle><Title>Parámetros del Sistema</Title></DialogTitle>
-               </DialogHeader>
+         <Dialog.Root open={configDialogVisible} onOpenChange={setConfigDialogVisible}>
+            <Dialog.Content className="sm:max-w-2xl">
+               <Dialog.Header>
+                  <Dialog.Title><Title>Parámetros del Sistema</Title></Dialog.Title>
+               </Dialog.Header>
                <ConfigForm onSave={handleConfigActualizado} />
-            </DialogContent>
-         </Dialog>
+            </Dialog.Content>
+         </Dialog.Root>
 
-         <Dialog open={editDialogVisible} onOpenChange={setEditDialogVisible}>
-            <DialogContent className="sm:max-w-2xl">
-               <DialogHeader>
-                  <DialogTitle><Title>Editar Usuario</Title></DialogTitle>
-               </DialogHeader>
+         <Dialog.Root open={editDialogVisible} onOpenChange={setEditDialogVisible}>
+            <Dialog.Content className="sm:max-w-2xl">
+               <Dialog.Header>
+                  <Dialog.Title><Title>Editar Usuario</Title></Dialog.Title>
+               </Dialog.Header>
                <EditarUsuario
                   id={userSession?.id ?? ""}
                   onUpdate={handleUsuActualizado}
                />
-            </DialogContent>
-         </Dialog>
-      </>
+            </Dialog.Content>
+         </Dialog.Root>
+      </Fragment>
    )
 }

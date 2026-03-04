@@ -1,3 +1,4 @@
+import * as Card from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import type { ReactNode } from "react"
 
@@ -7,12 +8,10 @@ interface Props {
    description: string
 }
 
-import { Card, CardContent } from "@/components/ui/card"
-
 export const FeatureCard = ({ icon, title, description }: Props) => {
    return (
-      <Card className="group hover:border-primary/30 transition-all duration-300">
-         <CardContent className="p-6">
+      <Card.Root className="group hover:border-primary/30 transition-all duration-300">
+         <Card.Content className="p-6">
             <div className="flex gap-5 items-start">
                <div className={cn(
                   "bg-primary/10 p-3 rounded-xl group-hover:scale-110",
@@ -25,7 +24,7 @@ export const FeatureCard = ({ icon, title, description }: Props) => {
                   <p className="text-muted-foreground text-sm leading-relaxed">{description}</p>
                </div>
             </div>
-         </CardContent>
-      </Card>
+         </Card.Content>
+      </Card.Root>
    )
 }

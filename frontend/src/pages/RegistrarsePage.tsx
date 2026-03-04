@@ -1,6 +1,6 @@
 import { Title } from "@/components/common/Title"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
+import * as Card from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Password } from "@/components/ui/password"
 import { Separator } from "@/components/ui/separator"
@@ -106,7 +106,7 @@ export const RegistrarsePage = () => {
          transition={{ duration: 0.5 }}
          className="w-full max-w-2xl"
       >
-         <Card className="p-8 md:p-10 shadow-lg border-2 border-border">
+         <Card.Root className="p-8 md:p-10 shadow-lg border-2 border-border">
             {/* Header */}
             <div className="mb-8">
                <Title>Crear Cuenta</Title>
@@ -250,7 +250,7 @@ export const RegistrarsePage = () => {
                {" "}y{" "}
                <a href="#" className="text-primary font-semibold hover:underline">Política de Privacidad</a>.
             </p>
-         </Card>
+         </Card.Root>
       </motion.div>
    )
 }

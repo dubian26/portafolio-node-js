@@ -1,5 +1,5 @@
 import { convert } from "@/appconfig/Convert"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
+import * as Dialog from "@/components/ui/dialog"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 interface Props {
@@ -66,12 +66,12 @@ export const SessionTimeout = ({ onTimeout, avisarCuandoQuede, timeout }: Props)
       formatoTiempo(Math.max(0, tiempoQueda)), [formatoTiempo, tiempoQueda])
 
    return (
-      <Dialog open={mostrarAviso}>
-         <DialogContent>
+      <Dialog.Root open={mostrarAviso}>
+         <Dialog.Content>
             <span>Su sesión expirará en </span>
             <strong>{tiempoFormateado} </strong>
             <span>minutos debido a inactividad.</span>
-         </DialogContent>
-      </Dialog>
+         </Dialog.Content>
+      </Dialog.Root>
    )
 }

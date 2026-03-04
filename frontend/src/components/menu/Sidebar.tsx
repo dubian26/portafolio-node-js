@@ -1,4 +1,3 @@
-import bgEscamas from "@/assets/bg-escamas.png"
 import { PerfilDialog } from "@/components/menu/PerfilDialog"
 import { SidebarContext } from "@/components/menu/SidebarContext"
 import { ChevronLeft, ChevronRight, Menu, Settings } from "lucide-react"
@@ -15,7 +14,6 @@ export const Sidebar = ({ children }: Props) => {
 
    return (
       <aside
-         style={{ backgroundImage: `url(${bgEscamas})` }}
          className={`
             h-screen shrink-0 overflow-hidden transition-all 
             shadow-[2px_0_4px_rgba(0,0,0,0.1)] z-50

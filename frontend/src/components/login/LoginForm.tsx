@@ -1,6 +1,6 @@
 import { Title } from "@/components/common/Title"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
+import * as Card from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Password } from "@/components/ui/password"
 import { useAppContext } from "@/contexts/AppContext"
@@ -47,7 +47,7 @@ export const LoginForm = () => {
          transition={{ duration: 0.5 }}
          className="w-full max-w-md"
       >
-         <Card className="p-8 shadow-lg border-2 border-border">
+         <Card.Root className="p-8 shadow-lg border-2 border-border">
             <div className="mb-8">
                <Title>Bienvenido</Title>
                <p className="text-muted-foreground text-sm">
@@ -119,7 +119,7 @@ export const LoginForm = () => {
                   <Volume2 size={20} />
                </Button>
             </div>
-         </Card>
+         </Card.Root>
       </motion.div>
    )
 }

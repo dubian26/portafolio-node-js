@@ -1,6 +1,8 @@
 import { UsuarioCrearCuenta } from "@/application/features/usuario/UsuarioCrearCuenta"
 import { UsuarioLogin } from "@/application/features/usuario/UsuarioLogin"
 import { UsuarioPorEmail } from "@/application/features/usuario/UsuarioPorEmail"
+import { UsuarioPorId } from "@/application/features/usuario/UsuarioPorId"
+
 import { CustomError } from "@/domain/errors/CustomError"
 import { UserInfo } from "@/domain/models/UserInfo"
 import { tokenBuilder } from "@/presentation/utils/tokenBuilder"
@@ -104,5 +106,12 @@ router.post("/buscar-usuario-por-email", async (req, res) => {
    const usuario = await useCase.execute(req.body)
    res.json(usuario)
 })
+
+router.post("/buscar-usuario-por-id", async (req, res) => {
+   const useCase = new UsuarioPorId()
+   const usuario = await useCase.execute(req.body)
+   res.json(usuario)
+})
+
 
 export default router
