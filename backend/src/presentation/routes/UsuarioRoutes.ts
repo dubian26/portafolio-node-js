@@ -1,3 +1,4 @@
+import { UsuarioActualizar } from "@/application/features/usuario/UsuarioActualizar"
 import { UsuarioCrearCuenta } from "@/application/features/usuario/UsuarioCrearCuenta"
 import { UsuarioLogin } from "@/application/features/usuario/UsuarioLogin"
 import { UsuarioPorEmail } from "@/application/features/usuario/UsuarioPorEmail"
@@ -8,6 +9,7 @@ import { UserInfo } from "@/domain/models/UserInfo"
 import { tokenBuilder } from "@/presentation/utils/tokenBuilder"
 import { Router } from "express"
 import jwt from "jsonwebtoken"
+import { authorizeHandler } from "../middlewares/authorizeHandler"
 
 const router = Router()
 
@@ -21,13 +23,13 @@ router.post("/login", async (req, res) => {
    const useCase = new UsuarioLogin()
    const usuario = await useCase.execute(req.body)
 
-    const userInfo: UserInfo = {
-       id: usuario.id,
-       email: usuario.email,
-       nombres: usuario.nombres,
-       apellidos: usuario.apellidos,
-       rolId: usuario.rolId
-    }
+   const userInfo: UserInfo = {
+      id: usuario.id,
+      email: usuario.email,
+      nombres: usuario.nombres,
+      apellidos: usuario.apellidos,
+      rolId: usuario.rolId
+   }
 
    const accessToken = tokenBuilder({
       tipoToken: "access",
@@ -71,13 +73,13 @@ router.post("/refrescar-token", async (req, res) => {
          issuer: jwtEmisor
       }) as UserInfo
 
-       const userInfo: UserInfo = {
-          id: decodedToken.id,
-          email: decodedToken.email,
-          nombres: decodedToken.nombres,
-          apellidos: decodedToken.apellidos,
-          rolId: decodedToken.rolId
-       }
+      const userInfo: UserInfo = {
+         id: decodedToken.id,
+         email: decodedToken.email,
+         nombres: decodedToken.nombres,
+         apellidos: decodedToken.apellidos,
+         rolId: decodedToken.rolId
+      }
 
       const newAccessToken = tokenBuilder({
          tipoToken: "access",
@@ -101,17 +103,22 @@ router.post("/refrescar-token", async (req, res) => {
    }
 })
 
-router.post("/buscar-usuario-por-email", async (req, res) => {
+router.post("/buscar-usuario-por-email", authorizeHandler, async (req, res) => {
    const useCase = new UsuarioPorEmail()
    const usuario = await useCase.execute(req.body)
    res.json(usuario)
 })
 
-router.post("/buscar-usuario-por-id", async (req, res) => {
+router.post("/buscar-usuario-por-id", authorizeHandler, async (req, res) => {
    const useCase = new UsuarioPorId()
    const usuario = await useCase.execute(req.body)
    res.json(usuario)
 })
 
+router.post("/actualizar-usuario", authorizeHandler, async (req, res) => {
+   const useCase = new UsuarioActualizar()
+   const usuario = await useCase.execute(req.body)
+   res.json(usuario)
+})
 
 export default router

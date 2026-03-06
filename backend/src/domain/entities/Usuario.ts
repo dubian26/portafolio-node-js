@@ -27,6 +27,11 @@ export class Usuario {
    get fechaCreacion() { return this.props.fechaCreacion }
    get fechaModifica() { return this.props.fechaModifica }
 
+   set nombres(nombres: string) { this.props.nombres = nombres }
+   set apellidos(apellidos: string) { this.props.apellidos = apellidos }
+   set password(password: string) { this.props.password = password }
+   set fechaModifica(fechaModifica: Date) { this.props.fechaModifica = fechaModifica }
+
    public toJSON() {
       return { ...this.props }
    }

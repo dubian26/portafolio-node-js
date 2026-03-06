@@ -11,8 +11,20 @@ export const Topbar = () => {
    const totalItems = cart.reduce((acc, item) => acc + item.cantidad, 0)
 
    return (
-      <div className="p-2 flex justify-between items-center">
-         <nav className="grow"></nav>
+      <div className={cn(
+         "glass-header border-b border-primary/10",
+         "p-2 flex justify-between items-center"
+      )}>
+         <div className="flex items-center gap-3">
+            <div className={cn(
+               "bg-primary p-2 rounded-lg flex items-center justify-center",
+               "text-primary-foreground shadow-lg shadow-primary/20"
+            )}>
+               <ShoppingCart size={20} />
+            </div>
+            <h2 className="text-xl font-bold tracking-tight">ShopEase</h2>
+         </div>
+         <nav className="flex-1"></nav>
          <nav className="w-52 shrink-0 flex justify-end gap-1">
             <button
                onClick={toggleCart}
@@ -54,8 +66,9 @@ export const Topbar = () => {
             <PerfilDialog>
                <button
                   className={cn(
-                     "size-10 min-w-10 rounded-full cursor-pointer flex items-center justify-center",
-                     "text-primary hover:bg-primary/10 transition-colors"
+                     "size-10 min-w-10 rounded-full cursor-pointer",
+                     "flex items-center justify-center text-primary",
+                     "hover:bg-primary/10 transition-colors"
                   )}
                >
                   <User size={20} />

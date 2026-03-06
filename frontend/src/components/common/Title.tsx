@@ -9,8 +9,8 @@ interface Props {
 export const Title = ({ children, className }: Props) => {
    return (
       <h1 className={cn(
-         "text-2xl md:text-3xl font-extrabold mb-2",
-         "bg-linear-to-r from-primary to-purple-500",
+         "text-2xl md:text-3xl font-extrabold mb-3 inline-block",
+         "bg-linear-to-r from-primary to-fuchsia-400 to-200%",
          "bg-clip-text text-transparent",
          className
       )}>

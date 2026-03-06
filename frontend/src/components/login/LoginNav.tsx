@@ -21,8 +21,8 @@ export const LoginNav = () => {
 
    return (
       <header className={cn(
-         "relative z-10 flex items-center justify-between",
-         "px-6 lg:px-20 py-6 border-b border-border backdrop-blur-md"
+         "fixed top-0 left-0 right-0 z-50 glass-header border-b border-primary/10",
+         "flex items-center justify-between px-6 lg:px-20 py-6",
       )}>
          <div className="flex items-center gap-10">
             <div className="flex items-center gap-3">
