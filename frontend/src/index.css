@@ -17,6 +17,13 @@
    }
 }
 
+.glass-header {
+   background: var(--background)/0.5;
+   color: var(--foreground);
+   backdrop-filter: blur(12px);
+   transition: background 0.4s ease, border-color 0.4s ease;
+}
+
 .bg-dots {
    background-size: 24px 24px;
    background-image: radial-gradient(circle, rgba(99, 102, 241, 0.18) 2px, transparent 2px);
@@ -101,7 +108,7 @@
 
    --background: oklch(95.763% 0.00849 67.438);
    --foreground: oklch(38.666% 0.00004 271.152);
-   --bg-surface: oklch(0.97 0 0);
+   --bg-surface: oklch(97.015% 0.00011 271.152);
    --card: var(--bg-surface);
    --card-foreground: var(--foreground);
    --popover: var(--bg-surface);
@@ -163,17 +170,3 @@
    --sidebar-border: oklch(1 0 0 / 10%);
    --sidebar-ring: oklch(0.556 0 0);
 }
-
-/* -- Header ---------------------------------- */
-.glass-header {
-   background: var(--background)/0.5;
-   color: var(--foreground);
-   backdrop-filter: blur(12px);
-   transition: background 0.4s ease, border-color 0.4s ease;
-}
-
-:root.light .glass-header {
-   background: rgba(250, 249, 247, 0.85);
-   border-bottom-color: rgba(13, 185, 242, 0.12);
-}
-

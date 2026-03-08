@@ -1,6 +1,7 @@
 import { errorHandler } from "@/presentation/middlewares/errorHandler"
 import UsuarioRoutes from "@/presentation/routes/UsuarioRoutes"
 import RolRoutes from "@/presentation/routes/RolRoutes"
+import CaracteristicaRoutes from "@/presentation/routes/CaracteristicaRoutes"
 import cookieParser from "cookie-parser"
 import express from "express"
 
@@ -26,6 +27,7 @@ app.use((req, res, next) => {
 
 app.use("/v1", UsuarioRoutes)
 app.use("/v1/roles", RolRoutes)
+app.use("/v1/caracteristicas", CaracteristicaRoutes)
 
 app.use(errorHandler)
 

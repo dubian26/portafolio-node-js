@@ -1,0 +1,20 @@
+{
+   // 1. Activa el formateo automático al guardar (Shift+Alt+F)
+   "editor.formatOnSave": true,
+   // 2. Activa la organización de imports al guardar (Shift+Alt+O)
+   "editor.codeActionsOnSave": {
+      "source.organizeImports": "always"
+   },
+   // 3. Reglas específicas para JS/TS (Sin punto y coma y Comillas Dobles)
+   "javascript.format.semicolons": "remove",
+   "typescript.format.semicolons": "remove",
+   "prettier.semi": false,
+   "prettier.singleQuote": false,
+   // Sugerencia: Asegúrate de que el formateador por defecto sea el adecuado
+   "[typescriptreact]": {
+      "editor.defaultFormatter": "vscode.typescript-language-features"
+   },
+   "[javascriptreact]": {
+      "editor.defaultFormatter": "vscode.typescript-language-features"
+   }
+}

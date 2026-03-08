@@ -7,6 +7,7 @@ import type { ConfigModel } from "@/models/ConfigModel"
 import { type InfoUsuaModel } from "@/models/InfoUsuaModel"
 import { configRepository } from "@/repositories/ConfigRepository"
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react"
+import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 
 const defaultConfig: ConfigModel = {
@@ -23,6 +24,7 @@ interface Props {
 }
 
 export const AppProvider = ({ children }: Props) => {
+   const navigate = useNavigate()
    const [loading, setLoading] = useState(true)
    const [config, setConfig] = useState<ConfigModel>(defaultConfig)
 
@@ -61,6 +63,7 @@ export const AppProvider = ({ children }: Props) => {
    const logout = useCallback(() => {
       sessionStorage.userSession = ""
       setUserSession(null)
+      navigate("/")
    }, [])
 
    // Registrar el handler de logout en FetchUtility

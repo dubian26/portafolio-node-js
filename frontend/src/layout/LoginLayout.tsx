@@ -1,11 +1,11 @@
 import { LoginNav } from "@/components/login/LoginNav"
 import { cn } from "@/lib/utils"
-import { Fragment } from "react"
 import { Outlet } from "react-router-dom"
 
 export const LoginLayout = () => {
    return (
-      <Fragment>
+      <div className="min-h-screen flex flex-col relative overflow-hidden">
+         <div className="fixed inset-0 -z-1 bg-dots pointer-events-none" />
          <LoginNav />
 
          <main className={cn(
@@ -23,6 +23,6 @@ export const LoginLayout = () => {
                <a href="#" className="hover:text-white transition-colors">Cookie Settings</a>
             </div>
          </footer>
-      </Fragment>
+      </div>
    )
 }

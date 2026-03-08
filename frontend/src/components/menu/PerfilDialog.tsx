@@ -6,14 +6,12 @@ import { EditarUsuario } from "@/components/usuario/EditarUsuario"
 import { useAppContext } from "@/contexts/AppContext"
 import { LogOut, Settings, User as UserIcon } from "lucide-react"
 import { Fragment, useState, type ReactNode } from "react"
-import { useNavigate } from "react-router-dom"
 
 interface Props {
    children: ReactNode
 }
 
 export const PerfilDialog = ({ children }: Props) => {
-   const navigate = useNavigate()
    const { userSession, logout } = useAppContext()
    const [editDialogVisible, setEditDialogVisible] = useState(false)
    const [configDialogVisible, setConfigDialogVisible] = useState(false)
@@ -44,11 +42,6 @@ export const PerfilDialog = ({ children }: Props) => {
       logout()
    }
 
-   const handleLogout = () => {
-      logout()
-      navigate("/")
-   }
-
    return (
       <Fragment>
          <DropdownMenu.Root>
@@ -72,7 +65,7 @@ export const PerfilDialog = ({ children }: Props) => {
                   <span>Configuración</span>
                </DropdownMenu.Item>
                <DropdownMenu.Separator />
-               <DropdownMenu.Item onClick={handleLogout} className="cursor-pointer">
+               <DropdownMenu.Item onClick={() => logout()} className="cursor-pointer">
                   <LogOut className="mr-2 size-5" strokeWidth={2.5} />
                   <span>Cerrar Sesión</span>
                </DropdownMenu.Item>
@@ -99,6 +92,6 @@ export const PerfilDialog = ({ children }: Props) => {
                />
             </Dialog.Content>
          </Dialog.Root>
-      </Fragment>
+      </Fragment >
    )
 }

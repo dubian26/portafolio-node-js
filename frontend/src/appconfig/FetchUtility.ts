@@ -3,12 +3,14 @@ import { CustomError } from "@/appconfig/CustomError"
 import { type ErrorModel } from "@/models/ErrorModel"
 
 type LogoutCallback = () => void
+type HttpMethod = "GET" | "POST" | "PUT" | "DELETE"
 
 // Callback de logout cuando la renovación del token falla
 let onLogout: LogoutCallback = () => { }
 
 // Promesa compartida para evitar múltiples renovaciones simultáneas
 let refreshPromise: Promise<boolean> | null = null
+
 
 export class FetchUtility {
 
@@ -20,16 +22,19 @@ export class FetchUtility {
       onLogout = callback
    }
 
-   private static setParams(params: unknown, method: string = "POST"): RequestInit {
-      return {
+   private static setParams(params: unknown, method: HttpMethod = "POST"): RequestInit {
+      const init: RequestInit = {
          method: method,
          headers: { "Content-Type": "application/json" },
-         credentials: "include",
-         body: JSON.stringify(params)
+         credentials: "include"
       }
+      if (method !== "GET" && method !== "DELETE") {
+         init.body = JSON.stringify(params)
+      }
+      return init
    }
 
-   static async fetch(url: string, params: unknown, method: string = "POST"): Promise<Response> {
+   static async fetch(url: string, params: unknown, method: HttpMethod = "POST"): Promise<Response> {
       const requestInit = this.setParams(params, method)
       const response = await fetch(url, requestInit)
       return response
@@ -45,7 +50,7 @@ export class FetchUtility {
     * 3. Si la renovación es exitosa → reintenta la petición original
     * 4. Si la renovación falla → ejecuta el callback de logout
     */
-   static async fetchAuth(url: string, params: unknown, method: string = "POST"): Promise<Response> {
+   static async fetchAuth(url: string, params: unknown, method: HttpMethod = "POST"): Promise<Response> {
       const response = await this.fetch(url, params, method)
       if (response.status !== 401) return response
 

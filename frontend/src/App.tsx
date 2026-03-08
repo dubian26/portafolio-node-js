@@ -1,56 +1,62 @@
 
-import { LoginLayout } from "@/layout/LoginLayout"
-import { MenuLayout } from "@/layout/MenuLayout"
+import { AppProvider } from "@/contexts/AppProvider"
+import { CartProvider } from "@/contexts/CartProvider"
+import { AppLayout } from "@/layout/AppLayout"
 import { ContenidoPage } from "@/pages/ContenidoPage"
+import { HomePage } from "@/pages/HomePage"
 import { LoginPage } from "@/pages/LoginPage"
 import { RegistrarsePage } from "@/pages/RegistrarsePage"
 import { useMemo } from "react"
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
-import { useAppContext } from "./contexts/AppContext"
+
+const RootEl = () => {
+   return (
+      <AppProvider>
+         <CartProvider>
+            <AppLayout />
+         </CartProvider>
+      </AppProvider>
+   )
+}
 
 export const App = () => {
-   const { userSession } = useAppContext()
-   const estaAutenti = userSession !== null
-   
-   const router = useMemo(() => createBrowserRouter([
-      {
-         path: "/",
-         element: estaAutenti ? <MenuLayout /> : <LoginLayout />,
-         children: [
-            {
-               index: true,
-               element: estaAutenti ?
-                  <Navigate to="/contenido" replace={true} /> :
-                  <Navigate to="/login" replace={true} />
-            },
-            {
-               path: "login",
-               element: <LoginPage />,
-            },
-            {
-               path: "registrarse",
-               element: <RegistrarsePage />,
-            },
-            {
-               path: "contenido",
-               element: <ContenidoPage />,
-            },
-            {
-               path: "*",
-               element: <div className="p-4">Página en construcción...</div>
-            }
-         ]
-      },
-      {
-         path: "*",
-         element: <Navigate to="/" replace />,
-      }
-   ]), [estaAutenti])
+   const router = useMemo(() =>
+      createBrowserRouter([
+         {
+            path: "/",
+            element: <RootEl />,
+            children: [
+               {
+                  index: true,
+                  element: <HomePage />
+               },
+               {
+                  path: "login",
+                  element: <LoginPage />,
+               },
+               {
+                  path: "registrarse",
+                  element: <RegistrarsePage />,
+               },
+               {
+                  path: "acerca-de",
+                  element: <ContenidoPage esMenuPublico={true} />,
+               },
+               {
+                  path: "contenido",
+                  element: <ContenidoPage esMenuPublico={false} />,
+               },
+               {
+                  path: "*",
+                  element: <div className="p-4">Página en construcción...</div>
+               }
+            ]
+         },
+         {
+            path: "*",
+            element: <Navigate to="/" replace />,
+         }
+      ]), [])
 
-   return (
-      <div className="min-h-screen flex flex-col relative overflow-hidden">
-         <div className="fixed inset-0 z-0 bg-dots pointer-events-none" />
-         <RouterProvider router={router} />
-      </div>
-   )
+   return <RouterProvider router={router} />
 }
