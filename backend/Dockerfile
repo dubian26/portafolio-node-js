@@ -31,5 +31,5 @@ COPY --from=build /app/prisma ./prisma
 # Exponer el puerto que usa Express
 EXPOSE 3000
 
-# Comando para iniciar la aplicación
-CMD ["npm", "start"]
+# Comando para iniciar la aplicación (incluye migraciones)
+CMD npx prisma migrate deploy && npm start
