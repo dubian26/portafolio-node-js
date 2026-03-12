@@ -20,15 +20,18 @@ export const CaracteristicaDialog = ({ isOpen, onClose, itemEdit, onSave }: Prop
    const [loading, setLoading] = useState(false)
    const [nombre, setNombre] = useState("")
    const [descripcion, setDescripcion] = useState("")
+   const [fechaPublicacion, setFechaPublicacion] = useState("")
 
    useEffect(() => {
       if (isOpen) {
          if (itemEdit) {
             setNombre(itemEdit.nombre)
             setDescripcion(itemEdit.descripcion)
+            setFechaPublicacion(itemEdit.fechaPublicacion.split("T")[0])
          } else {
             setNombre("")
             setDescripcion("")
+            setFechaPublicacion(new Date().toISOString().split("T")[0])
          }
       }
    }, [isOpen, itemEdit])
@@ -45,17 +48,19 @@ export const CaracteristicaDialog = ({ isOpen, onClose, itemEdit, onSave }: Prop
 
       setLoading(true)
       try {
+         const payload = {
+            nombre,
+            descripcion,
+            fechaPublicacion
+         }
+
          if (itemEdit?.id) {
             await caracteristicaRepository.actualizar({
                id: itemEdit.id,
-               nombre,
-               descripcion
+               ...payload
             })
          } else {
-            await caracteristicaRepository.insertar({
-               nombre,
-               descripcion
-            })
+            await caracteristicaRepository.insertar(payload)
          }
          onSave()
          onClose(false)
@@ -93,6 +98,15 @@ export const CaracteristicaDialog = ({ isOpen, onClose, itemEdit, onSave }: Prop
                      onChange={(e) => setDescripcion(e.target.value)}
                      placeholder="Detalle de la característica"
                      rows={4}
+                  />
+               </div>
+
+               <div className="space-y-1">
+                  <label className="text-sm font-medium">Fecha de publicación</label>
+                  <Input
+                     type="date"
+                     value={fechaPublicacion}
+                     onChange={(e) => setFechaPublicacion(e.target.value)}
                   />
                </div>
             </div>

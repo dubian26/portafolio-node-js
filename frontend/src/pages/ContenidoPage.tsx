@@ -105,8 +105,8 @@ export const ContenidoPage = ({ esMenuPublico }: Props) => {
             {
                caracteristicas
                   .sort((a, b) => {
-                     const dateA = a.fechaCreacion || ""
-                     const dateB = b.fechaCreacion || ""
+                     const dateA = (a.fechaPublicacion as string) || ""
+                     const dateB = (b.fechaPublicacion as string) || ""
                      return dateB.localeCompare(dateA)
                   })
                   .map((item) => (
@@ -123,7 +123,7 @@ export const ContenidoPage = ({ esMenuPublico }: Props) => {
                            </div>
                            <div className="mt-auto pt-4 flex items-center gap-2 text-sm font-medium text-muted-foreground border-t border-border/40">
                               <CalendarPlus className="size-4" />
-                              <span>{item.fechaCreacion ? dateUtility.formatFecha(item.fechaCreacion) : "Sin fecha"}</span>
+                              <span>{item.fechaPublicacion ? dateUtility.formatFecha(item.fechaPublicacion) : "Sin fecha"}</span>
                               {
                                  !esMenuPublico &&
                                  <div className="ml-auto">

@@ -7,6 +7,7 @@ export interface Props {
    nombre: string
    descripcion?: string
    activo?: boolean
+   fechaPublicacion?: string
 }
 
 export class CaracteristicaCrear {
@@ -19,6 +20,7 @@ export class CaracteristicaCrear {
          nombre: request.nombre,
          descripcion: request.descripcion || null,
          activo: request.activo !== undefined ? request.activo : true,
+         fechaPublicacion: request.fechaPublicacion ? new Date(request.fechaPublicacion) : new Date(),
          fechaCreacion: new Date(),
          fechaModifica: new Date()
       })

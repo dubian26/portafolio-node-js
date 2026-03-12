@@ -6,13 +6,20 @@ import cookieParser from "cookie-parser"
 import express from "express"
 
 const app = express()
+app.set("trust proxy", 1)
 
 app.use(express.json())
 app.use(cookieParser())
 
 // CORS Middleware
 app.use((req, res, next) => {
-   res.header("Access-Control-Allow-Origin", process.env.FRONTEND_URL)
+   const origin = req.headers.origin
+   const frontendUrl = process.env.FRONTEND_URL
+
+   if (origin && frontendUrl && origin === frontendUrl) {
+      res.header("Access-Control-Allow-Origin", origin)
+   }
+
    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
    res.header("Access-Control-Allow-Credentials", "true")

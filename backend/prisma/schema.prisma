@@ -78,12 +78,13 @@ model PermisoRol {
 }
 
 model Caracteristica {
-  id            String   @id @default(uuid())
-  nombre        String   @unique @db.VarChar(100)
-  descripcion   String?  @db.VarChar(255)
-  activo        Boolean  @default(true)
-  fechaCreacion DateTime @default(now()) @map("fecha_creacion")
-  fechaModifica DateTime @updatedAt @map("fecha_modifica")
+  id               String   @id @default(uuid())
+  nombre           String   @unique @db.VarChar(100)
+  descripcion      String?  @db.VarChar(255)
+  activo           Boolean  @default(true)
+  fechaPublicacion DateTime @default(now()) @map("fecha_publicacion")
+  fechaCreacion    DateTime @default(now()) @map("fecha_creacion")
+  fechaModifica    DateTime @updatedAt @map("fecha_modifica")
 
   @@map("Caracteristicas")
 }
