@@ -18,12 +18,15 @@ model Usuario {
   password      String    @db.VarChar(255)
   nombres       String    @db.VarChar(50)
   apellidos     String    @db.VarChar(50)
-  activo        Boolean   @default(true)
-  fechaCreacion DateTime  @default(now()) @map("fecha_creacion")
-  fechaModifica DateTime  @updatedAt @map("fecha_modifica")
+  activo          Boolean   @default(true)
+  emailVerificado Boolean   @default(false) @map("email_verificado")
+  fechaCreacion   DateTime  @default(now()) @map("fecha_creacion")
+  fechaModifica   DateTime  @updatedAt @map("fecha_modifica")
 
   rolId         String
   rol           Rol       @relation(fields: [rolId], references: [id])
+
+  codigos       CodigoVerificacion[]
 
   @@map("Usuarios")
 }
@@ -87,4 +90,18 @@ model Caracteristica {
   fechaModifica    DateTime @updatedAt @map("fecha_modifica")
 
   @@map("Caracteristicas")
+}
+
+model CodigoVerificacion {
+  id            String   @id @default(uuid())
+  usuarioId     String
+  codigo        String   @db.VarChar(6)
+  proposito     String   @db.VarChar(50)
+  expiracion    DateTime
+  utilizado     Boolean  @default(false)
+  fechaCreacion DateTime @default(now()) @map("fecha_creacion")
+
+  usuario       Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@map("CodigosVerificacion")
 }

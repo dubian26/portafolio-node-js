@@ -53,6 +53,20 @@ export class UsuarioApiRepository {
       const response = await FetchUtility.fetchAuth(url, item)
       await FetchUtility.getData<UsuarioModel>(response)
    }
+
+   async verificarEmail(email: string, codigo: string): Promise<{ mensaje: string }> {
+      const url = `${API_URL}/verificar-email`
+      const response = await FetchUtility.fetch(url, { email, codigo })
+      const data = await FetchUtility.getData<{ mensaje: string }>(response)
+      return data!
+   }
+
+   async reenviarOtp(email: string): Promise<{ mensaje: string }> {
+      const url = `${API_URL}/reenviar-otp`
+      const response = await FetchUtility.fetch(url, { email })
+      const data = await FetchUtility.getData<{ mensaje: string }>(response)
+      return data!
+   }
 }
 
 export const usuarioRepository = new UsuarioApiRepository()

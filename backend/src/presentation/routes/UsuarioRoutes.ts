@@ -3,6 +3,8 @@ import { UsuarioCrearCuenta } from "@/application/features/usuario/UsuarioCrearC
 import { UsuarioLogin } from "@/application/features/usuario/UsuarioLogin"
 import { UsuarioPorEmail } from "@/application/features/usuario/UsuarioPorEmail"
 import { UsuarioPorId } from "@/application/features/usuario/UsuarioPorId"
+import { UsuarioVerificarEmail } from "@/application/features/usuario/UsuarioVerificarEmail"
+import { UsuarioReenviarOtp } from "@/application/features/usuario/UsuarioReenviarOtp"
 
 import { CustomError } from "@/domain/errors/CustomError"
 import { UserInfo } from "@/domain/models/UserInfo"
@@ -17,6 +19,18 @@ router.post("/crear-cuenta-usuario", async (req, res) => {
    const useCase = new UsuarioCrearCuenta()
    const idResult = await useCase.execute(req.body)
    res.json(idResult)
+})
+
+router.post("/verificar-email", async (req, res) => {
+   const useCase = new UsuarioVerificarEmail()
+   const result = await useCase.execute(req.body)
+   res.json(result)
+})
+
+router.post("/reenviar-otp", async (req, res) => {
+   const useCase = new UsuarioReenviarOtp()
+   const result = await useCase.execute(req.body)
+   res.json(result)
 })
 
 router.post("/login", async (req, res) => {

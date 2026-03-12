@@ -4,13 +4,15 @@ import * as Card from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Password } from "@/components/ui/password"
 import { Separator } from "@/components/ui/separator"
+import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp"
 import { useAppContext } from "@/contexts/AppContext"
 import { cn } from "@/lib/utils"
 import { type UsuarioModel } from "@/models/UsuarioModel"
 import { usuarioRepository } from "@/repositories/UsuarioRepository"
-import { Loader2, Mail, User, UserRoundPlus } from "lucide-react"
+import { Loader2, Mail, User, UserRoundPlus, CheckCircle2 } from "lucide-react"
 import { motion } from "motion/react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 
 const GoogleIcon = () => (
    <svg viewBox="0 0 24 24" width="20" height="20">
@@ -33,12 +35,26 @@ const OutlookIcon = () => (
 
 export const RegistrarsePage = () => {
    const { mostrarError, mostrarMensaje } = useAppContext()
+   const navigate = useNavigate()
+   
+   const [step, setStep] = useState<"REGISTER" | "VERIFY">("REGISTER")
+   
    const [nombres, setNombres] = useState("")
    const [apellidos, setApellidos] = useState("")
    const [email, setEmail] = useState("")
    const [password, setPassword] = useState("")
    const [confirPassword, setConfirPassword] = useState("")
    const [loading, setLoading] = useState(false)
+
+   const [otp, setOtp] = useState("")
+   const [countdown, setCountdown] = useState(60)
+
+   useEffect(() => {
+      if (step === "VERIFY" && countdown > 0) {
+         const timer = setTimeout(() => setCountdown(countdown - 1), 1000)
+         return () => clearTimeout(timer)
+      }
+   }, [step, countdown])
 
    const handleClickRegistrar = async () => {
       if (!nombres.trim()) {
@@ -83,17 +99,49 @@ export const RegistrarsePage = () => {
          }
 
          await usuarioRepository.crearCuenta(nuevoUsuario)
-         mostrarMensaje("Usuario creado exitosamente")
-
-         setNombres("")
-         setApellidos("")
-         setEmail("")
-         setPassword("")
-         setConfirPassword("")
+         mostrarMensaje("Usuario creado. Revisa tu correo.")
+         setStep("VERIFY")
+         setCountdown(60)
 
       } catch (error) {
-         mostrarError("Ocurrió un error al intentar registrar el usuario")
-         console.error(error)
+         const err = error as { message?: string }
+         mostrarError(err?.message || "Ocurrió un error al intentar registrar el usuario")
+      } finally {
+         setLoading(false)
+      }
+   }
+
+   const handleClickVerificar = async () => {
+      if (otp.length !== 6) {
+         mostrarError("El código debe tener 6 dígitos")
+         return
+      }
+
+      setLoading(true)
+      try {
+         const response = await usuarioRepository.verificarEmail(email, otp)
+         mostrarMensaje(response.mensaje)
+         navigate("/login")
+      } catch (error) {
+         const err = error as { message?: string }
+         mostrarError(err?.message || "Error verificando código")
+      } finally {
+         setLoading(false)
+      }
+   }
+
+   const handleClickReenviar = async () => {
+      if (countdown > 0) return
+
+      setLoading(true)
+      try {
+         const response = await usuarioRepository.reenviarOtp(email)
+         mostrarMensaje(response.mensaje)
+         setCountdown(60)
+         setOtp("")
+      } catch (error) {
+         const err = error as { message?: string }
+         mostrarError(err?.message || "Error al reenviar código")
       } finally {
          setLoading(false)
       }
@@ -107,143 +155,206 @@ export const RegistrarsePage = () => {
          className="w-full max-w-2xl"
       >
          <Card.Root className="p-8 md:p-10 shadow-lg border-2 border-border">
-            {/* Header */}
-            <div className="mb-8">
-               <Title>Crear Cuenta</Title>
-               <p className="text-muted-foreground text-sm">
-                  Completa los campos para registrarte y comenzar a comprar.
-               </p>
-            </div>
-
-            {/* Social Buttons */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-               <Button
-                  variant="outline" type="button" disabled={loading}
-                  className="w-full h-11 gap-3 cursor-pointer font-medium"
-                  onClick={() => mostrarMensaje("Opción no implementada")}
-               >
-                  <GoogleIcon />
-                  Registrarse con Google
-               </Button>
-               <Button
-                  variant="outline" type="button" disabled={loading}
-                  className="w-full h-11 gap-3 cursor-pointer font-medium"
-                  onClick={() => mostrarMensaje("Opción no implementada")}
-               >
-                  <OutlookIcon />
-                  Registrarse con Outlook
-               </Button>
-            </div>
-
-            {/* Divider */}
-            <div className="relative my-6">
-               <Separator />
-               <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-4 text-xs text-muted-foreground uppercase tracking-wider">
-                  o continúa con email
-               </span>
-            </div>
-
-            {/* Form */}
-            <form className="space-y-0" onSubmit={(e) => e.preventDefault()}>
-               <div className="grid grid-cols-12 gap-x-4 gap-y-5">
-                  <div className="col-span-12 space-y-1">
-                     <label className="text-sm block px-1 text-foreground">
-                        Correo Electrónico
-                     </label>
-                     <div className="relative group">
-                        <Mail className={cn(
-                           "absolute left-3 top-1/2 -translate-y-1/2",
-                           "text-muted-foreground group-focus-within:text-primary",
-                           "transition-colors"
-                        )} size={20} />
-                        <Input
-                           type="email" placeholder="name@example.com"
-                           value={email} disabled={loading}
-                           className="pl-10 w-full"
-                           onChange={(e) => setEmail(e.target.value)}
-                        />
-                     </div>
+            {step === "REGISTER" && (
+               <>
+                  <div className="mb-8">
+                     <Title>Crear Cuenta</Title>
+                     <p className="text-muted-foreground text-sm">
+                        Completa los campos para registrarte y comenzar a comprar.
+                     </p>
                   </div>
 
-                  <div className="col-span-12 md:col-span-6 space-y-1">
-                     <label className="text-sm block px-1 text-foreground">
-                        Nombres
-                     </label>
-                     <div className="relative group">
-                        <User className={cn(
-                           "absolute left-3 top-1/2 -translate-y-1/2",
-                           "text-muted-foreground group-focus-within:text-primary",
-                           "transition-colors"
-                        )} size={20} />
-                        <Input
-                           type="text" placeholder="Nombres"
-                           value={nombres} disabled={loading}
-                           className="pl-10 w-full"
-                           onChange={(e) => setNombres(e.target.value)}
-                        />
-                     </div>
-                  </div>
-
-                  <div className="col-span-12 md:col-span-6 space-y-1">
-                     <label className="text-sm block px-1 text-foreground">
-                        Apellidos
-                     </label>
-                     <div className="relative group">
-                        <User className={cn(
-                           "absolute left-3 top-1/2 -translate-y-1/2",
-                           "text-muted-foreground group-focus-within:text-primary",
-                           "transition-colors"
-                        )} size={20} />
-                        <Input
-                           type="text" placeholder="Apellidos"
-                           value={apellidos} disabled={loading}
-                           className="pl-10 w-full"
-                           onChange={(e) => setApellidos(e.target.value)}
-                        />
-                     </div>
-                  </div>
-
-                  <div className="col-span-12 md:col-span-6 space-y-1">
-                     <label className="text-sm block px-1 text-foreground">
-                        Contraseña
-                     </label>
-                     <Password
-                        password={password} disabled={loading}
-                        onChange={pass => setPassword(pass)}
-                     />
-                  </div>
-
-                  <div className="col-span-12 md:col-span-6 space-y-1">
-                     <label className="text-sm block px-1 text-foreground">
-                        Confirmar Contraseña
-                     </label>
-                     <Password
-                        password={confirPassword} disabled={loading}
-                        onChange={pass => setConfirPassword(pass)}
-                     />
-                  </div>
-
-                  <div className="col-span-12 mt-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
                      <Button
-                        disabled={loading}
-                        onClick={handleClickRegistrar}
-                        className="w-full h-11 cursor-pointer text-base font-bold gap-2"
-                        size="lg"
+                        variant="outline" type="button" disabled={loading}
+                        className="w-full h-11 gap-3 cursor-pointer font-medium"
+                        onClick={() => mostrarMensaje("Opción no implementada")}
                      >
-                        {
-                           loading ?
-                              <Loader2 className="animate-spin" size={20} /> :
-                              <UserRoundPlus size={20} strokeWidth={3} />
-                        }
-                        {
-                           loading ? "Registrando..." : "Crear mi cuenta"
-                        }
+                        <GoogleIcon />
+                        Registrarse con Google
+                     </Button>
+                     <Button
+                        variant="outline" type="button" disabled={loading}
+                        className="w-full h-11 gap-3 cursor-pointer font-medium"
+                        onClick={() => mostrarMensaje("Opción no implementada")}
+                     >
+                        <OutlookIcon />
+                        Registrarse con Outlook
                      </Button>
                   </div>
-               </div>
-            </form>
 
-            {/* Footer */}
+                  <div className="relative my-6">
+                     <Separator />
+                     <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-4 text-xs text-muted-foreground uppercase tracking-wider">
+                        o continúa con email
+                     </span>
+                  </div>
+
+                  <form className="space-y-0" onSubmit={(e) => e.preventDefault()}>
+                     <div className="grid grid-cols-12 gap-x-4 gap-y-5">
+                        <div className="col-span-12 space-y-1">
+                           <label className="text-sm block px-1 text-foreground">
+                              Correo Electrónico
+                           </label>
+                           <div className="relative group">
+                              <Mail className={cn(
+                                 "absolute left-3 top-1/2 -translate-y-1/2",
+                                 "text-muted-foreground group-focus-within:text-primary",
+                                 "transition-colors"
+                              )} size={20} />
+                              <Input
+                                 type="email" placeholder="name@example.com"
+                                 value={email} disabled={loading}
+                                 className="pl-10 w-full"
+                                 onChange={(e) => setEmail(e.target.value)}
+                              />
+                           </div>
+                        </div>
+
+                        <div className="col-span-12 md:col-span-6 space-y-1">
+                           <label className="text-sm block px-1 text-foreground">
+                              Nombres
+                           </label>
+                           <div className="relative group">
+                              <User className={cn(
+                                 "absolute left-3 top-1/2 -translate-y-1/2",
+                                 "text-muted-foreground group-focus-within:text-primary",
+                                 "transition-colors"
+                              )} size={20} />
+                              <Input
+                                 type="text" placeholder="Nombres"
+                                 value={nombres} disabled={loading}
+                                 className="pl-10 w-full"
+                                 onChange={(e) => setNombres(e.target.value)}
+                              />
+                           </div>
+                        </div>
+
+                        <div className="col-span-12 md:col-span-6 space-y-1">
+                           <label className="text-sm block px-1 text-foreground">
+                              Apellidos
+                           </label>
+                           <div className="relative group">
+                              <User className={cn(
+                                 "absolute left-3 top-1/2 -translate-y-1/2",
+                                 "text-muted-foreground group-focus-within:text-primary",
+                                 "transition-colors"
+                              )} size={20} />
+                              <Input
+                                 type="text" placeholder="Apellidos"
+                                 value={apellidos} disabled={loading}
+                                 className="pl-10 w-full"
+                                 onChange={(e) => setApellidos(e.target.value)}
+                              />
+                           </div>
+                        </div>
+
+                        <div className="col-span-12 md:col-span-6 space-y-1">
+                           <label className="text-sm block px-1 text-foreground">
+                              Contraseña
+                           </label>
+                           <Password
+                              password={password} disabled={loading}
+                              onChange={pass => setPassword(pass)}
+                           />
+                        </div>
+
+                        <div className="col-span-12 md:col-span-6 space-y-1">
+                           <label className="text-sm block px-1 text-foreground">
+                              Confirmar Contraseña
+                           </label>
+                           <Password
+                              password={confirPassword} disabled={loading}
+                              onChange={pass => setConfirPassword(pass)}
+                           />
+                        </div>
+
+                        <div className="col-span-12 mt-2">
+                           <Button
+                              disabled={loading}
+                              onClick={handleClickRegistrar}
+                              className="w-full h-11 cursor-pointer text-base font-bold gap-2"
+                              size="lg"
+                           >
+                              {
+                                 loading ?
+                                    <Loader2 className="animate-spin" size={20} /> :
+                                    <UserRoundPlus size={20} strokeWidth={3} />
+                              }
+                              {
+                                 loading ? "Registrando..." : "Crear mi cuenta"
+                              }
+                           </Button>
+                        </div>
+                     </div>
+                  </form>
+               </>
+            )}
+
+            {step === "VERIFY" && (
+               <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="flex flex-col items-center justify-center text-center space-y-6"
+               >
+                  <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-2">
+                     <Mail size={32} />
+                  </div>
+                  
+                  <div>
+                     <Title>Verifica tu correo</Title>
+                     <p className="text-muted-foreground text-sm mt-2 max-w-sm mx-auto">
+                        Hemos enviado un código de 6 dígitos a <b>{email}</b>. Ingrésalo a continuación para continuar.
+                     </p>
+                  </div>
+
+                  <div className="flex justify-center w-full py-4">
+                     <InputOTP maxLength={6} value={otp} onChange={setOtp} disabled={loading}>
+                        <InputOTPGroup>
+                           <InputOTPSlot index={0} />
+                           <InputOTPSlot index={1} />
+                           <InputOTPSlot index={2} />
+                        </InputOTPGroup>
+                        <InputOTPSeparator />
+                        <InputOTPGroup>
+                           <InputOTPSlot index={3} />
+                           <InputOTPSlot index={4} />
+                           <InputOTPSlot index={5} />
+                        </InputOTPGroup>
+                     </InputOTP>
+                  </div>
+
+                  <div className="w-full space-y-3">
+                     <Button
+                        disabled={loading || otp.length !== 6}
+                        onClick={handleClickVerificar}
+                        className="w-full h-11 cursor-pointer text-base font-bold gap-2"
+                     >
+                        {loading ? <Loader2 className="animate-spin" size={20} /> : <CheckCircle2 size={20} />}
+                        Verificar Código
+                     </Button>
+
+                     <Button
+                        variant="outline"
+                        disabled={loading || countdown > 0}
+                        onClick={handleClickReenviar}
+                        className="w-full h-11"
+                     >
+                        {countdown > 0 ? `Reenviar código en ${countdown}s` : "Reenviar código"}
+                     </Button>
+
+                     <Button
+                        variant="ghost"
+                        disabled={loading}
+                        onClick={() => setStep("REGISTER")}
+                        className="w-full h-11 text-muted-foreground"
+                     >
+                        Volver al registro
+                     </Button>
+                  </div>
+               </motion.div>
+            )}
+
             <p className="mt-6 text-center text-sm text-muted-foreground">
                Al registrarte, aceptas nuestros{" "}
                <a href="#" className="text-primary font-semibold hover:underline">Términos de Servicio</a>

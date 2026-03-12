@@ -1,6 +1,7 @@
 import { unitOfWork } from "@/application/config/UnitOfWork"
 import { Rol } from "@/domain/entities/Rol"
 import { Usuario } from "@/domain/entities/Usuario"
+import { CodigoVerificacion } from "@/domain/entities/CodigoVerificacion"
 import { CustomError } from "@/domain/errors/CustomError"
 import { v7 as uuidv7 } from "uuid"
 
@@ -26,16 +27,37 @@ export class UsuarioCrearCuenta {
          nombres: request.nombres,
          apellidos: request.apellidos,
          rolId: rol.id,
-         activo: true,
+         activo: false,
+         emailVerificado: false,
          fechaCreacion: new Date(),
          fechaModifica: new Date()
       })
 
       await unitOfWork.usuario.insertar(nuevoUsuario)
 
+      const otp = Math.floor(100000 + Math.random() * 900000).toString()
+      const codigoVerificacion = new CodigoVerificacion({
+         id: uuidv7().replace(/-/g, ""),
+         usuarioId: nuevoUsuario.id,
+         codigo: otp,
+         proposito: "REGISTRO",
+         expiracion: new Date(Date.now() + 15 * 60 * 1000), // 15 mins
+         utilizado: false,
+         fechaCreacion: new Date()
+      })
+
+      await unitOfWork.codigoVerificacion.insertar(codigoVerificacion)
+
+      await unitOfWork.emailService.enviarEmail(
+         nuevoUsuario.email,
+         "Verifica tu correo electrónico",
+         `<h1>¡Bienvenido a la Tienda Online!</h1><p>Tu código de verificación es: <b>${otp}</b></p><p>Este código espirará en 15 minutos.</p>`
+      )
+
       return {
          id: nuevoUsuario.id,
-         mensaje: "Usuario creado con éxito."
+         email: nuevoUsuario.email,
+         mensaje: "Usuario creado. Por favor verifica tu email con el código OTP enviado."
       }
    }
 }

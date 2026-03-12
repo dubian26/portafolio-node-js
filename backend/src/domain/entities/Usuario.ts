@@ -6,6 +6,7 @@ export interface UsuarioProps {
    apellidos: string
    rolId: string
    activo: boolean
+   emailVerificado: boolean
    fechaCreacion: Date
    fechaModifica: Date
 }
@@ -24,12 +25,15 @@ export class Usuario {
    get apellidos() { return this.props.apellidos }
    get rolId() { return this.props.rolId }
    get activo() { return this.props.activo }
+   get emailVerificado() { return this.props.emailVerificado }
    get fechaCreacion() { return this.props.fechaCreacion }
    get fechaModifica() { return this.props.fechaModifica }
 
    set nombres(nombres: string) { this.props.nombres = nombres }
    set apellidos(apellidos: string) { this.props.apellidos = apellidos }
    set password(password: string) { this.props.password = password }
+   set activo(activo: boolean) { this.props.activo = activo }
+   set emailVerificado(emailVerificado: boolean) { this.props.emailVerificado = emailVerificado }
    set fechaModifica(fechaModifica: Date) { this.props.fechaModifica = fechaModifica }
 
    public toJSON() {

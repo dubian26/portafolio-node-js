@@ -14,6 +14,12 @@ export class UsuarioLogin {
          throw new CustomError("Credenciales inválidas.", 501)
       }
 
+      if (!usuario.emailVerificado) {
+         const error = new CustomError("Email no verificado.", 403)
+         error.addDetails({ needOtp: true, email: usuario.email })
+         throw error
+      }
+
       return usuario?.toResult()
    }
 }
