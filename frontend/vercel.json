@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://demo-tienda-online-full-production.up.railway.app/v1/:path*"
+    }
+  ]
+}

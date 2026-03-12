@@ -39,7 +39,7 @@ router.post("/login", async (req, res) => {
    res.cookie("accessToken", accessToken.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      sameSite: "strict",
       maxAge: accessToken.expTokenMs
    })
 
@@ -51,7 +51,7 @@ router.post("/login", async (req, res) => {
    res.cookie("refreshToken", refreshToken.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      sameSite: "strict",
       maxAge: refreshToken.expTokenMs
    })
 
@@ -89,7 +89,7 @@ router.post("/refrescar-token", async (req, res) => {
       res.cookie("accessToken", newAccessToken.token, {
          httpOnly: true,
          secure: process.env.NODE_ENV === "production",
-         sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+         sameSite: "strict",
          maxAge: newAccessToken.expTokenMs
       })
 
