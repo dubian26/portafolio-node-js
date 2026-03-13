@@ -1,21 +1,25 @@
+name: tienda-online
 services:
   app:
     build: .
+    image: tienda-online-backend
+    container_name: tienda-online-app
     ports:
       - "3000:3000"
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/mytienda?schema=public
+      - DATABASE_URL=${DATABASE_URL}
       - PORT=3000
     depends_on:
       db:
         condition: service_healthy
 
   db:
-    image: postgres:15-alpine
+    image: postgres:16-alpine
+    container_name: tienda-online-db
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=dubian541
-      - POSTGRES_DB=tienda_online
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
     ports:
       - "5432:5432"
     healthcheck:
