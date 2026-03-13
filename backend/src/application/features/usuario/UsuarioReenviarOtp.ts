@@ -37,7 +37,9 @@ export class UsuarioReenviarOtp {
 
       await unitOfWork.codigoVerificacion.insertar(nuevoCodigo)
 
-      await unitOfWork.emailService.enviarEmail(
+      // No esperamos el envío del email para que la respuesta HTTP no se quede colgada
+      // si el servicio de correo tiene problemas de conexión en producción (ej. Railway).
+      unitOfWork.emailService.enviarEmail(
          usuario.email,
          "Reenvío: Verifica tu correo electrónico",
          `<h1>¡Bienvenido a la Tienda Online!</h1><p>Tu nuevo código de verificación es: <b>${otp}</b></p><p>Este código espirará en 15 minutos.</p>`

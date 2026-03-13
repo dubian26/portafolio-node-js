@@ -6,11 +6,17 @@ export class EmailService implements IEmailService {
 
    constructor() {
       this.transporter = nodemailer.createTransport({
-         service: "gmail",
+         host: "smtp.gmail.com",
+         port: 465,
+         secure: true, // true para puerto 465
          auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS,
          },
+         // Agregamos timeouts para evitar que la petición HTTP se quede colgada
+         connectionTimeout: 10000, // 10 segundos
+         greetingTimeout: 10000,
+         socketTimeout: 10000,
       })
    }
 
@@ -36,6 +42,7 @@ export class EmailService implements IEmailService {
             subject,
             html,
          })
+         console.log(`[SUCCESS] Email enviado correctamente a: ${to}`)
       } catch (error) {
          console.error("Error enviando email OTP via Nodemailer:", error)
       }

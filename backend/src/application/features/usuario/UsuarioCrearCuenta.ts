@@ -48,7 +48,9 @@ export class UsuarioCrearCuenta {
 
       await unitOfWork.codigoVerificacion.insertar(codigoVerificacion)
 
-      await unitOfWork.emailService.enviarEmail(
+      // No esperamos el envío del email para que la respuesta HTTP no se quede colgada
+      // si el servicio de correo tiene problemas de conexión en producción (ej. Railway).
+      unitOfWork.emailService.enviarEmail(
          nuevoUsuario.email,
          "Verifica tu correo electrónico",
          `<h1>¡Bienvenido a la Tienda Online!</h1><p>Tu código de verificación es: <b>${otp}</b></p><p>Este código espirará en 15 minutos.</p>`
