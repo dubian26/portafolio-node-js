@@ -16,7 +16,7 @@ router.post("/", authorizeHandler, async (req, res) => {
 
 router.put("/:id", authorizeHandler, async (req, res) => {
    const useCase = new CaracteristicaActualizar()
-   const result = await useCase.execute({ id: req.params.id, ...req.body })
+   const result = await useCase.execute({ id: req.params.id as string, ...req.body })
    res.json(result)
 })
 
@@ -34,7 +34,7 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
    const useCase = new CaracteristicaPorId()
-   const result = await useCase.execute({ id: req.params.id })
+   const result = await useCase.execute({ id: req.params.id as string })
    res.json(result)
 })
 

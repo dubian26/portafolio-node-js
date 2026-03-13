@@ -2,16 +2,16 @@ import { Title } from "@/components/common/Title"
 import { Button } from "@/components/ui/button"
 import * as Card from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp"
 import { Password } from "@/components/ui/password"
 import { Separator } from "@/components/ui/separator"
-import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp"
 import { useAppContext } from "@/contexts/AppContext"
 import { cn } from "@/lib/utils"
 import { type UsuarioModel } from "@/models/UsuarioModel"
 import { usuarioRepository } from "@/repositories/UsuarioRepository"
-import { Loader2, Mail, User, UserRoundPlus, CheckCircle2 } from "lucide-react"
+import { CheckCircle2, Loader2, Mail, User, UserRoundPlus } from "lucide-react"
 import { motion } from "motion/react"
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 const GoogleIcon = () => (
@@ -36,9 +36,9 @@ const OutlookIcon = () => (
 export const RegistrarsePage = () => {
    const { mostrarError, mostrarMensaje } = useAppContext()
    const navigate = useNavigate()
-   
+
    const [step, setStep] = useState<"REGISTER" | "VERIFY">("REGISTER")
-   
+
    const [nombres, setNombres] = useState("")
    const [apellidos, setApellidos] = useState("")
    const [email, setEmail] = useState("")
@@ -300,15 +300,13 @@ export const RegistrarsePage = () => {
                   <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-2">
                      <Mail size={32} />
                   </div>
-                  
+
                   <div>
                      <Title>Verifica tu correo</Title>
                      <p className="text-muted-foreground text-sm mt-2 max-w-sm mx-auto">
-                        Hemos enviado un código de 6 dígitos a <b>{email}</b>. Ingrésalo a continuación para continuar.
+                        Hemos enviado un código de 6 dígitos a <b>{email}</b>.{" "}
+                        Ingrésalo a continuación para continuar.
                      </p>
-                     <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 rounded-lg text-xs text-amber-800 dark:text-amber-200">
-                        <b>Modo Demo:</b> Si no recibes el correo, revisa la terminal del backend para ver el código generado.
-                     </div>
                   </div>
 
                   <div className="flex justify-center w-full py-4">
