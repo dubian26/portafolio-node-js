@@ -1,25 +1,43 @@
 import { IEmailService } from "@/domain/interfaces/IEmailService"
-import { Resend } from "resend"
+import nodemailer from "nodemailer"
 
 export class EmailService implements IEmailService {
-   private resend: Resend
+   private transporter: nodemailer.Transporter
 
    constructor() {
-      // By default initializes with RESEND_API_KEY environment variable if no string is provided.
-      // Or you can explicitly pass process.env.RESEND_API_KEY if desired.
-      this.resend = new Resend(process.env.RESEND_API_KEY || "re_dummy") 
+      this.transporter = nodemailer.createTransport({
+         service: "gmail",
+         auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
+         },
+      })
    }
 
    async enviarEmail(to: string, subject: string, html: string): Promise<void> {
+      // Extraemos el OTP del HTML para el log de la demo
+      const otpMatch = html.match(/<b>(\d{6})<\/b>/)
+      const otp = otpMatch ? otpMatch[1] : "N/A"
+
+      console.log("-----------------------------------------")
+      console.log(`[DEMO MODE] Enviando email a: ${to}`)
+      console.log(`[DEMO MODE] OTP: ${otp}`)
+      console.log("-----------------------------------------")
+
       try {
-         await this.resend.emails.send({
-            from: "Acme <onboarding@resend.dev>", // Replace with your verified domain
-            to: [to],
-            subject: subject,
-            html: html
+         if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+            console.warn("[WARN] EMAIL_USER o EMAIL_PASS no configurados. Saltando envío real.")
+            return
+         }
+
+         await this.transporter.sendMail({
+            from: `"Tienda Online Demo" <${process.env.EMAIL_USER}>`,
+            to,
+            subject,
+            html,
          })
       } catch (error) {
-         console.error("Error enviando email OTP", error)
+         console.error("Error enviando email OTP via Nodemailer:", error)
       }
    }
 }

@@ -99,7 +99,7 @@ export const RegistrarsePage = () => {
          }
 
          await usuarioRepository.crearCuenta(nuevoUsuario)
-         mostrarMensaje("Usuario creado. Revisa tu correo.")
+         mostrarMensaje("Cuenta creada. Hemos enviado un código a tu correo.")
          setStep("VERIFY")
          setCountdown(60)
 
@@ -306,6 +306,9 @@ export const RegistrarsePage = () => {
                      <p className="text-muted-foreground text-sm mt-2 max-w-sm mx-auto">
                         Hemos enviado un código de 6 dígitos a <b>{email}</b>. Ingrésalo a continuación para continuar.
                      </p>
+                     <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 rounded-lg text-xs text-amber-800 dark:text-amber-200">
+                        <b>Modo Demo:</b> Si no recibes el correo, revisa la terminal del backend para ver el código generado.
+                     </div>
                   </div>
 
                   <div className="flex justify-center w-full py-4">
