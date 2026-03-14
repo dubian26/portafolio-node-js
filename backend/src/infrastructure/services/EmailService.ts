@@ -1,5 +1,4 @@
 import { IEmailService } from "@/domain/interfaces/IEmailService"
-import nodemailer from "nodemailer"
 
 export class EmailService implements IEmailService {
    async enviarEmail(to: string, subject: string, html: string): Promise<void> {
