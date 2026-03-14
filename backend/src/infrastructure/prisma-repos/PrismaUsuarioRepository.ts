@@ -15,6 +15,11 @@ export class PrismaUsuarioRepository implements IUsuarioRepository {
       return new Usuario(record)
    }
 
+   async listarTodos(): Promise<Usuario[]> {
+      const records = await dbClient.usuario.findMany()
+      return records.map(record => new Usuario(record))
+   }
+
    async insertar(usuario: Usuario): Promise<void> {
       await dbClient.usuario.create({
          data: usuario.toJSON()
@@ -26,6 +31,12 @@ export class PrismaUsuarioRepository implements IUsuarioRepository {
       await dbClient.usuario.update({
          where: { id },
          data
+      })
+   }
+
+   async eliminar(id: string): Promise<void> {
+      await dbClient.usuario.delete({
+         where: { id }
       })
    }
 }

@@ -1,4 +1,5 @@
 import { errorHandler } from "@/presentation/middlewares/errorHandler"
+import AuthRoutes from "@/presentation/routes/AuthRoutes"
 import UsuarioRoutes from "@/presentation/routes/UsuarioRoutes"
 import RolRoutes from "@/presentation/routes/RolRoutes"
 import CaracteristicaRoutes from "@/presentation/routes/CaracteristicaRoutes"
@@ -32,7 +33,8 @@ app.use((req, res, next) => {
    next()
 })
 
-app.use("/v1", UsuarioRoutes)
+app.use("/v1/auth", AuthRoutes)
+app.use("/v1/usuarios", UsuarioRoutes)
 app.use("/v1/roles", RolRoutes)
 app.use("/v1/caracteristicas", CaracteristicaRoutes)
 

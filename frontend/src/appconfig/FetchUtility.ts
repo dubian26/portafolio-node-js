@@ -104,7 +104,7 @@ export class FetchUtility {
     */
    private static async fetchRefreshToken(): Promise<boolean> {
       try {
-         const response = await fetch(`${API_URL}/refrescar-token`, {
+         const response = await fetch(`${API_URL}/auth/refrescar-token`, {
             method: "POST",
             credentials: "include"
          })
