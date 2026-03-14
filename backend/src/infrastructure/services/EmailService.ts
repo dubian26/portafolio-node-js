@@ -6,17 +6,23 @@ export class EmailService implements IEmailService {
 
    constructor() {
       this.transporter = nodemailer.createTransport({
-         host: "smtp.gmail.com",
-         port: 587,
-         secure: false, // false para puerto 587 (usa STARTTLS)
+         host: "smtp.googlemail.com",
+         port: 465,
+         secure: true,
          auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS,
          },
-         // Agregamos timeouts para evitar que la petición HTTP se quede colgada
-         connectionTimeout: 10000, // 10 segundos
-         greetingTimeout: 10000,
-         socketTimeout: 10000,
+         // Activamos logs detallados para ver qué pasa exactamente en Railway
+         debug: true,
+         logger: true,
+         tls: {
+            rejectUnauthorized: false,
+            servername: "smtp.gmail.com"
+         },
+         connectionTimeout: 25000,
+         greetingTimeout: 25000,
+         socketTimeout: 25000,
       })
    }
 
