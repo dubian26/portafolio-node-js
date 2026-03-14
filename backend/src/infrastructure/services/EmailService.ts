@@ -2,55 +2,51 @@ import { IEmailService } from "@/domain/interfaces/IEmailService"
 import nodemailer from "nodemailer"
 
 export class EmailService implements IEmailService {
-   private transporter: nodemailer.Transporter
-
-   constructor() {
-      this.transporter = nodemailer.createTransport({
-         host: "smtp.googlemail.com",
-         port: 465,
-         secure: true,
-         auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
-         },
-         // Activamos logs detallados para ver qué pasa exactamente en Railway
-         debug: true,
-         logger: true,
-         tls: {
-            rejectUnauthorized: false,
-            servername: "smtp.gmail.com"
-         },
-         connectionTimeout: 25000,
-         greetingTimeout: 25000,
-         socketTimeout: 25000,
-      })
-   }
-
    async enviarEmail(to: string, subject: string, html: string): Promise<void> {
       // Extraemos el OTP del HTML para el log de la demo
       const otpMatch = html.match(/<b>(\d{6})<\/b>/)
       const otp = otpMatch ? otpMatch[1] : "N/A"
 
       console.log("-----------------------------------------")
-      console.log(`[DEMO MODE] Enviando email a: ${to}`)
-      console.log(`[DEMO MODE] OTP: ${otp}`)
+      console.log(`[ENVÍO EMAIL] Destinatario: ${to}`)
+      console.log(`[ENVÍO EMAIL] OTP: ${otp}`)
       console.log("-----------------------------------------")
 
       try {
-         if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-            console.warn("[WARN] EMAIL_USER o EMAIL_PASS no configurados. Saltando envío real.")
+         const apiKey = process.env.BREVO_API_KEY
+         const senderEmail = process.env.EMAIL_USER // Tu Gmail verificado en Brevo
+
+         if (!apiKey || !senderEmail) {
+            console.warn("[WARN] BREVO_API_KEY o EMAIL_USER no configurados. Saltando envío real.")
             return
          }
 
-         await this.transporter.sendMail({
-            from: `"Tienda Online Demo" <${process.env.EMAIL_USER}>`,
-            to,
-            subject,
-            html,
+         const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+            method: "POST",
+            headers: {
+               "accept": "application/json",
+               "api-key": apiKey,
+               "content-type": "application/json"
+            },
+            body: JSON.stringify({
+               sender: {
+                  name: "Tienda Online Demo",
+                  email: senderEmail
+               },
+               to: [{ email: to }],
+               subject: subject,
+               htmlContent: html
+            })
          })
-         console.log(`[SUCCESS] Email enviado correctamente a: ${to}`)
+
+         if (response.ok) {
+            console.log(`[SUCCESS] Email enviado vía API de Brevo a: ${to}`)
+         } else {
+            const errorData = await response.json()
+            console.error("[ERROR] Error de Brevo API:", JSON.stringify(errorData))
+         }
       } catch (error) {
-         console.error("Error enviando email OTP via Nodemailer:", error)
+         console.error("Error enviando email vía API:", error)
       }
    }
 }
