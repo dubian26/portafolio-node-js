@@ -7,8 +7,8 @@ export class EmailService implements IEmailService {
    constructor() {
       this.transporter = nodemailer.createTransport({
          host: "smtp.gmail.com",
-         port: 465,
-         secure: true, // true para puerto 465
+         port: 587,
+         secure: false, // false para puerto 587 (usa STARTTLS)
          auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS,
